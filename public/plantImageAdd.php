@@ -87,6 +87,6 @@ function ciniki_materiamedica_plantImageAdd(&$ciniki) {
 	// Add the plant image to the database
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectAdd');
-	return ciniki_core_objectAdd($ciniki, $args['business_id'], 'ciniki.materiamedica.image', $args, 0x07);
+	return ciniki_core_objectAdd($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_image', $args, 0x07);
 }
 ?>

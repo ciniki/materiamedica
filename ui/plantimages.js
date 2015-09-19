@@ -5,6 +5,29 @@ function ciniki_materiamedica_plantimages() {
 	this.webFlags = {
 		'1':{'name':'Hidden'},
 		};
+	this.Flags1 = {
+		'1':{'name':'Photo'},
+		'2':{'name':'Illustration'},
+		};
+	this.Flags2 = {
+		'3':{'name':'Mature'},
+		'4':{'name':'Immature'},
+		};
+	this.Flags3 = {
+		'5':{'name':'Spring'},
+		'6':{'name':'Summer'},
+		'7':{'name':'Fall'},
+		'8':{'name':'Winter'},
+		};
+	this.Parts = {
+		'1':{'name':'Bark'},
+		'2':{'name':'Flowers'},
+		'3':{'name':'Fruits'},
+		'4':{'name':'Leaves'},
+		'5':{'name':'Roots'},
+		'6':{'name':'Seeds'},
+		'7':{'name':'Stems'},
+		};
 	this.init = function() {
 		//
 		// The panel to display the edit form
@@ -21,7 +44,11 @@ function ciniki_materiamedica_plantimages() {
 			}},
 			'info':{'label':'Information', 'type':'simpleform', 'fields':{
 				'name':{'label':'Title', 'type':'text'},
-				'webflags':{'label':'Website', 'type':'flags', 'join':'yes', 'flags':this.webFlags},
+				'flags1':{'label':'Type', 'type':'flagspiece', 'field':'flags', 'mask':0x03, 'join':'yes', 'flags':this.Flags1},
+				'flags2':{'label':'Age', 'type':'flagspiece', 'field':'flags', 'mask':0x0c, 'join':'yes', 'flags':this.Flags2},
+				'flags3':{'label':'Season', 'type':'flagspiece', 'field':'flags', 'mask':0xf0, 'join':'yes', 'flags':this.Flags3},
+				'parts':{'label':'Parts', 'type':'flags', 'join':'yes', 'flags':this.Parts},
+//				'webflags':{'label':'Website', 'type':'flags', 'join':'yes', 'flags':this.webFlags},
 			}},
 			'_description':{'label':'Description', 'type':'simpleform', 'fields':{
 				'description':{'label':'', 'type':'textarea', 'size':'small', 'hidelabel':'yes'},
@@ -86,9 +113,13 @@ function ciniki_materiamedica_plantimages() {
 						M.api.err(rsp);
 						return false;
 					}
-					M.ciniki_materiamedica_plantimages.edit.data = rsp.image;
-					M.ciniki_materiamedica_plantimages.edit.refresh();
-					M.ciniki_materiamedica_plantimages.edit.show(cb);
+					var p = M.ciniki_materiamedica_plantimages.edit;
+					p.data = rsp.image;
+//					p.data.flags1 = (rsp.image.flags&0x03);
+//					p.data.flags2 = (rsp.image.flags&0x0c);
+//					p.data.flags3 = (rsp.image.flags&0xf0);
+					p.refresh();
+					p.show(cb);
 				});
 		} else {
 			this.edit.reset();
@@ -101,7 +132,12 @@ function ciniki_materiamedica_plantimages() {
 	this.imageSave = function() {
 		if( this.edit.plant_image_id > 0 ) {
 			var c = this.edit.serializeFormData('no');
-			if( c != '' ) {
+//			var flags = this.edit.formValue('flags1') | this.edit.formValue('flags2') | this.edit.formValue('flags3');
+//			if( flags != this.edit.data.flags ) {
+//				if( c == null ) { c = new FormData; }
+//				c.append('flags', flags);
+//			}
+			if( c != null ) {
 				var rsp = M.api.postJSONFormData('ciniki.materiamedica.plantImageUpdate', 
 					{'business_id':M.curBusinessID, 
 					'plant_image_id':this.edit.plant_image_id}, c,
@@ -118,6 +154,8 @@ function ciniki_materiamedica_plantimages() {
 			}
 		} else {
 			var c = this.edit.serializeFormData('yes');
+			var flags = this.edit.formValue('flags1') | this.edit.formValue('flags2') | this.edit.formValue('flags3');
+			c.append('flags', flags);
 			var rsp = M.api.postJSONFormData('ciniki.materiamedica.plantImageAdd', 
 				{'business_id':M.curBusinessID, 'plant_id':this.edit.plant_id}, c,
 					function(rsp) {

@@ -47,7 +47,7 @@ function ciniki_materiamedica_objects($ciniki) {
 	$objects['plant_image'] = array(
 		'name'=>'Plant Image',
 		'sync'=>'yes',
-		'table'=>'ciniki_materiamedica_images',
+		'table'=>'ciniki_materiamedica_plant_images',
 		'fields'=>array(
 			'plant_id'=>array('ref'=>'ciniki.materiamedica.plant'),
 			'name'=>array(),

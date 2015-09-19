@@ -90,6 +90,6 @@ function ciniki_materiamedica_plantImageUpdate(&$ciniki) {
 	// Update the plant image in the database
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectUpdate');
-	return ciniki_core_objectUpdate($ciniki, $args['business_id'], 'ciniki.materiamedica.image', $args['plant_image_id'], $args);
+	return ciniki_core_objectUpdate($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_image', $args['plant_image_id'], $args);
 }
 ?>

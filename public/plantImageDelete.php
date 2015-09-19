@@ -54,6 +54,6 @@ function ciniki_materiamedica_plantImageDelete(&$ciniki) {
 	// Delete the object
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectDelete');
-	return ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.materiamedica.image', $args['plant_image_id'], $item['uuid'], 0x07);
+	return ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_image', $args['plant_image_id'], $item['uuid'], 0x07);
 }
 ?>

@@ -47,6 +47,8 @@ function ciniki_materiamedica_plantImageGet($ciniki) {
 	$strsql = "SELECT ciniki_materiamedica_plant_images.id, "
 		. "ciniki_materiamedica_plant_images.name, "
 		. "ciniki_materiamedica_plant_images.permalink, "
+		. "ciniki_materiamedica_plant_images.flags, "
+		. "ciniki_materiamedica_plant_images.parts, "
 		. "ciniki_materiamedica_plant_images.webflags, "
 		. "ciniki_materiamedica_plant_images.image_id, "
 		. "ciniki_materiamedica_plant_images.description "
@@ -57,7 +59,7 @@ function ciniki_materiamedica_plantImageGet($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.materiamedica', array(
 		array('container'=>'images', 'fname'=>'id', 'name'=>'image',
-			'fields'=>array('id', 'name', 'permalink', 'webflags', 'image_id', 'description')),
+			'fields'=>array('id', 'name', 'permalink', 'flags', 'parts', 'webflags', 'image_id', 'description')),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;

@@ -72,7 +72,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
 			'growth_pattern'=>'0',
 			'permalink'=>'',
 			'image_id'=>'0',
-			'habitat'=>'0',
+			'habitat'=>'',
 			'cultivation'=>'',
 			'history'=>'',
 			'warnings'=>'',
