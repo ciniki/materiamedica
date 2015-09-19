@@ -13,6 +13,8 @@
 # family:			
 # genus:
 # species:
+#
+# common_name:		The common name(s) for the plant.
 # 
 # permalink:		The permalink for the plant.
 #
@@ -32,6 +34,17 @@
 #					50 - Perennial
 #
 #
+# parts_used:		The parts of the plant that are used. This should match with bit field in plant_images.
+#
+#					0x01 - Bark
+#					0x02 - Flowers
+#					0x04 - Fruits
+#					0x08 - Roots
+#					0x10 - Seeds
+#					0x20 - Stems
+#					0x40 - Leaves
+#					0x80 - 
+#					
 # image_id:			The ID of the image to use as the primary image for the plant.
 #
 # habitat:			The habitat information.
@@ -49,13 +62,14 @@ create table ciniki_materiamedica_plants (
 	id int not null auto_increment,
 	uuid char(36) not null,
 	business_id int not null,
-	
 	family varchar(200) not null,
 	genus varchar(200) not null,
 	species varchar(200) not null,
+	common_name varchar(250) not null,
 	permalink varchar(500) not null,
 	plant_type tinyint unsigned not null,
 	growth_pattern tinyint unsigned not null,
+	parts_used tinyint unsigned not null,
 	image_id int not null,
 	habitat text not null,
 	cultivation text not null,
@@ -65,7 +79,6 @@ create table ciniki_materiamedica_plants (
 	quick_id varchar(1000) not null,
 	notes text not null,
 	reference_notes text not null,
-
 	date_added datetime not null,
 	last_updated datetime not null,
 	primary key (id),

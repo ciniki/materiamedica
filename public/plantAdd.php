@@ -26,8 +26,10 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
         'family'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Family'), 
         'genus'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Genus'), 
         'species'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Species'), 
+        'common_name'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Common Name'), 
         'plant_type'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plant Type'), 
         'growth_pattern'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Growth Pattern'), 
+        'parts_used'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Parts Used'), 
 		'image_id'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'0', 'name'=>'Image'),
         'habitat'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Habitat'), 
         'cultivation'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Cultivation'), 
@@ -37,8 +39,6 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
         'quick_id'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'Quick ID'), 
         'notes'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'Notes'), 
         'reference_notes'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'Reference Notes'), 
-		'tag-10'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Common Names'),
-		'tag-20'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Parts'),
 		'tag-30'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Uses'),
 		'tag-40'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Actions'),
         )); 
@@ -102,8 +102,6 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
 	// Update the tags
 	//
 	$tag_types = array(
-		'10'=>'commonnames',
-		'20'=>'parts',
 		'30'=>'uses',
 		'40'=>'actions',
 		);
@@ -111,7 +109,7 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
 		if( isset($args['tag-' . $tag_type]) ) {
 			ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'tagsUpdate');
 			$rc = ciniki_core_tagsUpdate($ciniki, 'ciniki.materiamedica', 'plant_tag', $args['business_id'],
-				'ciniki_materiamedia_plant_tags', 'ciniki_materiamedica_history',
+				'ciniki_materiamedica_plant_tags', 'ciniki_materiamedica_history',
 				'plant_id', $plant_id, $tag_type, $args['tag-' . $tag_type]);
 			if( $rc['stat'] != 'ok' ) {
 				ciniki_core_dbTransactionRollback($ciniki, 'ciniki.materiamedica');

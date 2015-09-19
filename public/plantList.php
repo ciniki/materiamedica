@@ -98,7 +98,8 @@ function ciniki_materiamedica_plantList($ciniki) {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "
 			. "ciniki_materiamedica_plants.family, "
 			. "ciniki_materiamedica_plants.genus, "
-			. "ciniki_materiamedica_plants.species "
+			. "ciniki_materiamedica_plants.species, "
+			. "ciniki_materiamedica_plants.common_name "
 			. "FROM ciniki_materiamedica_plants "
 			. "LEFT JOIN ciniki_materiamedica_plant_tags ON ("
 				. "ciniki_materiamedica_plants.id = ciniki_materiamedica_plant_tags.plant_id "
@@ -113,7 +114,8 @@ function ciniki_materiamedica_plantList($ciniki) {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "	
 			. "ciniki_materiamedica_plants.family, "
 			. "ciniki_materiamedica_plants.genus, "
-			. "ciniki_materiamedica_plants.species "
+			. "ciniki_materiamedica_plants.species, "
+			. "ciniki_materiamedica_plants.common_name "
 			. "FROM ciniki_materiamedica_plant_tags, ciniki_materiamedica_plants "
 			. "WHERE ciniki_materiamedica_plant_tags.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 			. "AND ciniki_materiamedica_plant_tags.tag_type = '" . ciniki_core_dbQuote($ciniki, $args['tag_type']) . "' "
@@ -126,7 +128,8 @@ function ciniki_materiamedica_plantList($ciniki) {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "	
 			. "ciniki_materiamedica_plants.family, "
 			. "ciniki_materiamedica_plants.genus, "
-			. "ciniki_materiamedica_plants.species "
+			. "ciniki_materiamedica_plants.species, "
+			. "ciniki_materiamedica_plants.common_name "
 			. "FROM ciniki_materiamedica_plant_tags, ciniki_materiamedica_plants "
 			. "WHERE ciniki_materiamedica_plant_tags.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 			. "AND ciniki_materiamedica_plant_tags.tag_type = '" . ciniki_core_dbQuote($ciniki, $args['tag_type']) . "' "
@@ -138,7 +141,8 @@ function ciniki_materiamedica_plantList($ciniki) {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "
 			. "ciniki_materiamedica_plants.family, "
 			. "ciniki_materiamedica_plants.genus, "
-			. "ciniki_materiamedica_plants.species "
+			. "ciniki_materiamedica_plants.species, "
+			. "ciniki_materiamedica_plants.common_name "
 			. "FROM ciniki_materiamedica_plants "
 			. "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 			. "ORDER BY last_updated "
@@ -152,7 +156,7 @@ function ciniki_materiamedica_plantList($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.materiamedica', array(
 		array('container'=>'plants', 'fname'=>'id', 'name'=>'plant',
-			'fields'=>array('id', 'family', 'genus', 'species')),
+			'fields'=>array('id', 'family', 'genus', 'species', 'common_name')),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;

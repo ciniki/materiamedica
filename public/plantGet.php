@@ -68,8 +68,10 @@ function ciniki_materiamedica_plantGet($ciniki) {
 			'family'=>'',
 			'genus'=>'',
 			'species'=>'',
+			'common_name'=>'',
 			'plant_type'=>'0',
 			'growth_pattern'=>'0',
+			'parts_used'=>'0',
 			'permalink'=>'',
 			'image_id'=>'0',
 			'habitat'=>'',
@@ -86,11 +88,14 @@ function ciniki_materiamedica_plantGet($ciniki) {
 			. "ciniki_materiamedica_plants.family, "
 			. "ciniki_materiamedica_plants.genus, "
 			. "ciniki_materiamedica_plants.species, "
+			. "ciniki_materiamedica_plants.common_name, "
 			. "ciniki_materiamedica_plants.permalink, "
 			. "ciniki_materiamedica_plants.plant_type, "
 			. "ciniki_materiamedica_plants.plant_type AS plant_type_text, "
 			. "ciniki_materiamedica_plants.growth_pattern, "
 			. "ciniki_materiamedica_plants.growth_pattern AS growth_pattern_text, "
+			. "ciniki_materiamedica_plants.parts_used, "
+			. "ciniki_materiamedica_plants.parts_used AS parts_used_text, "
 			. "ciniki_materiamedica_plants.image_id, "
 			. "ciniki_materiamedica_plants.habitat, "
 			. "ciniki_materiamedica_plants.cultivation, "
@@ -107,12 +112,13 @@ function ciniki_materiamedica_plantGet($ciniki) {
 
 		$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.materiamedica', array(
 			array('container'=>'plants', 'fname'=>'id', 'name'=>'plant',
-				'fields'=>array('id', 'family', 'genus', 'species', 'permalink', 
+				'fields'=>array('id', 'family', 'genus', 'species', 'common_name', 'permalink', 
 					'plant_type', 'plant_type_text', 'growth_pattern', 'growth_pattern_text', 
 					'image_id', 'habitat', 'cultivation', 
 					'history', 'warnings', 'contraindications', 'quick_id', 'notes', 'reference_notes'),
 				'maps'=>array('plant_type_text'=>$maps['plant']['plant_type'],
 					'growth_pattern_text'=>$maps['plant']['growth_pattern'],
+//					'parts_used_text'=>$maps['plant']['parts_used'],
 					),
 				),
 			));

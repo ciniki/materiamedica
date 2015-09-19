@@ -35,12 +35,13 @@ function ciniki_materiamedica_plantSearch($ciniki) {
 	// Get the number of faqs in each status for the business, 
 	// if no rows found, then return empty array
 	//
-	$strsql = "SELECT id, family, genus, species "
+	$strsql = "SELECT id, family, genus, species, common_name "
 		. "FROM ciniki_materiamedica_plants "
 		. "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 		. "AND (family LIKE '" . ciniki_core_dbQuote($ciniki, $args['start_needle']) . "%' "
 			. "OR genus LIKE '" . ciniki_core_dbQuote($ciniki, $args['start_needle']) . "%' "
 			. "OR species LIKE '" . ciniki_core_dbQuote($ciniki, $args['start_needle']) . "%' "
+			. "OR common_name LIKE '" . ciniki_core_dbQuote($ciniki, $args['start_needle']) . "%' "
 			. ") "
 		. "";
 	$strsql .= "ORDER BY family, genus, species COLLATE latin1_general_cs "
@@ -53,7 +54,7 @@ function ciniki_materiamedica_plantSearch($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 	$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.materiamedica', array(
 		array('container'=>'plants', 'fname'=>'id', 'name'=>'plant', 
-			'fields'=>array('id', 'family', 'genus', 'species')),
+			'fields'=>array('id', 'family', 'genus', 'species', 'common_name')),
 		));
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;

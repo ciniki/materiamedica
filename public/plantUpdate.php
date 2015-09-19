@@ -26,8 +26,10 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
         'family'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Family'), 
         'genus'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Genus'), 
         'species'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Species'), 
+        'common_name'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Common Name'), 
         'plant_type'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Plant Type'), 
         'growth_pattern'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Growth Pattern'), 
+        'parts_used'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Parts Used'), 
 		'image_id'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'0', 'name'=>'Image'),
         'habitat'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Habitat'), 
         'cultivation'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Cultivation'), 
@@ -37,8 +39,6 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
         'quick_id'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'Quick ID'), 
         'notes'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'Notes'), 
         'reference_notes'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'Reference Notes'), 
-		'tag-10'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Common Names'),
-		'tag-20'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Parts'),
 		'tag-30'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Uses'),
 		'tag-40'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Actions'),
         )); 
@@ -125,8 +125,6 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
 	// Update the tags
 	//
 	$tag_types = array(
-		'10'=>'commonnames',
-		'20'=>'parts',
 		'30'=>'uses',
 		'40'=>'actions',
 		);

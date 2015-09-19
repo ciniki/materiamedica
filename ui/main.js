@@ -6,8 +6,6 @@ function ciniki_materiamedica_main() {
 		'1':{'name':'Hidden'},
 		};
 	this.tagTypes = {
-		'10':{'name':'Common Names', 'arg':'commonnames', 'visible':'no'},
-		'20':{'name':'Parts Used', 'arg':'parts', 'visible':'no'},
 		'30':{'name':'Uses', 'arg':'uses', 'visible':'no'},
 		'40':{'name':'Actions', 'arg':'actions', 'visible':'no'},
 		};
@@ -24,6 +22,15 @@ function ciniki_materiamedica_main() {
 		'40':'Biennial',
 		'50':'Perennial',
 		};
+	this.partsUsed = {
+		'1':{'name':'Bark'},
+		'2':{'name':'Flowers'},
+		'3':{'name':'Fruits'},
+		'4':{'name':'Leaves'},
+		'5':{'name':'Roots'},
+		'6':{'name':'Seeds'},
+		'7':{'name':'Stems'},
+		};
 	this.init = function() {
 		//
 		// Setup the main panel to list the collection
@@ -32,28 +39,13 @@ function ciniki_materiamedica_main() {
 			'ciniki_materiamedica_main', 'menu',
 			'mc', 'medium narrowaside', 'sectioned', 'ciniki.materiamedica.main.menu');
 		this.menu.data = {};
-		this.menu.formtab = '20';
+		this.menu.formtab = '30';
 		this.menu.tag_name = '';
 		this.menu.formtabs = {'label':'', 'tabs':{
-			'20':{'label':'Parts Used', 'visible':'yes', 'fn':'M.ciniki_materiamedica_main.showMenu(null,20,\'\');'},
 			'30':{'label':'Uses', 'visible':'yes', 'fn':'M.ciniki_materiamedica_main.showMenu(null,30,\'\');'},
 			'40':{'label':'Actions', 'visible':'yes', 'fn':'M.ciniki_materiamedica_main.showMenu(null,40,\'\');'},
 			}},
 		this.menu.forms = {};
-		this.menu.forms['20'] = {
-			'tags':{'label':'', 'aside':'yes', 'type':'simplegrid', 'num_cols':1},
-			'search':{'label':'', 'type':'livesearchgrid', 'livesearchcols':1, 'hint':'plant name', 
-				'cellClasses':['multiline'],
-				'noData':'No plants found',
-				},
-			'plants':{'label':'Latest Plants', 'type':'simplegrid', 'num_cols':1,
-				'headerValues':['Genus-Species'],
-				'cellClasses':['multiline'],
-				'sortable':'yes', 'sortTypes':['text'],
-				'addTxt':'Add Plant',
-				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);',
-				},
-			};
 		this.menu.forms['30'] = {
 			'tags':{'label':'', 'aside':'yes', 'type':'simplegrid', 'num_cols':1},
 			'search':{'label':'', 'type':'livesearchgrid', 'livesearchcols':1, 'hint':'plant name', 
@@ -80,7 +72,7 @@ function ciniki_materiamedica_main() {
 				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);',
 				},
 			};
-		this.menu.sections = this.menu.forms['20'];	
+		this.menu.sections = this.menu.forms['30'];	
 		this.menu.cellValue = function(s, i, j, d) {
 			if( s == 'tags' ) {
 				return d.tag.tag_name + ' <span class="count">' + d.tag.num_plants + '</span>';
@@ -137,23 +129,39 @@ function ciniki_materiamedica_main() {
 				'image_id':{'label':'', 'type':'image_id', 'hidelabel':'yes', 'history':'no'},
 			}},
 			'info':{'label':'Public Information', 'aside':'yes', 'list':{
-				'name':{'label':'Title', 'type':'text'},
+				'name':{'label':'Name', 'type':'text'},
+				'common_name':{'label':'Common', 'type':'text'},
 				'type_growth':{'label':'Type', 'type':'text'},
-				'tag-10':{'label':'Common Names', 'visible':'yes'},
-				'tag-20':{'label':'Parts Used', 'visible':'yes'},
 				'tag-30':{'label':'Uses', 'visible':'yes'},
 				'tag-40':{'label':'Actions', 'visible':'yes'},
 			}},
-			'warnings':{'label':'Warnings', 'aside':'yes', 'type':'htmlcontent'},
-			'contraindications':{'label':'Contraindications', 'aside':'yes', 'type':'htmlcontent'},
-			'quick_id':{'label':'Quick ID', 'aside':'yes', 'type':'htmlcontent'},
+			'warnings':{'label':'Warnings', 'aside':'yes', 'type':'htmlcontent',
+				'visible':function() {
+					return ((M.ciniki_materiamedica_main.plant.data.warnings!=null&&M.ciniki_materiamedica_main.plant.data.warnings!='')?'yes':'no');
+				}},
+			'contraindications':{'label':'Contraindications', 'aside':'yes', 'type':'htmlcontent',
+				'visible':function() {
+					return ((M.ciniki_materiamedica_main.plant.data.contraindications!=null&&M.ciniki_materiamedica_main.plant.data.contraindications!='')?'yes':'no');
+				}},
+			'quick_id':{'label':'Quick ID', 'aside':'yes', 'type':'htmlcontent',
+				'visible':function() {
+					return ((M.ciniki_materiamedica_main.plant.data.quick_id!=null&&M.ciniki_materiamedica_main.plant.data.quick_id!='')?'yes':'no');
+				}},
 			// Add tabs for additional information sections
 			'habitat':{'label':'Habitat', 'type':'htmlcontent'},
 			'cultivation':{'label':'Cultivation', 'type':'htmlcontent'},
-			'history':{'label':'History', 'type':'htmlcontent'},
-			'notes':{'label':'Notes', 'type':'htmlcontent'},
-			'reference_notes':{'label':'References', 'type':'htmlcontent'},
-
+			'history':{'label':'History', 'type':'htmlcontent',
+				'visible':function() {
+					return ((M.ciniki_materiamedica_main.plant.data.history!=null&&M.ciniki_materiamedica_main.plant.data.history!='')?'yes':'no');
+				}},
+			'notes':{'label':'Notes', 'type':'htmlcontent',
+				'visible':function() {
+					return ((M.ciniki_materiamedica_main.plant.data.notes!=null&&M.ciniki_materiamedica_main.plant.data.notes!='')?'yes':'no');
+				}},
+			'reference_notes':{'label':'References', 'type':'htmlcontent',
+				'visible':function() {
+					return ((M.ciniki_materiamedica_main.plant.data.reference_notes!=null&&M.ciniki_materiamedica_main.plant.data.reference_notes!='')?'yes':'no');
+				}},
 			'images':{'label':'Additional Images', 'type':'simplethumbs'},
 			'_images':{'label':'', 'type':'simplegrid', 'num_cols':1,
 				'addTxt':'Add Image',
@@ -252,25 +260,21 @@ function ciniki_materiamedica_main() {
 				'family':{'label':'Family', 'type':'text'},
 				'genus':{'label':'Genus', 'type':'text'},
 				'species':{'label':'Species', 'type':'text'},
+				'common_name':{'label':'Common', 'type':'text'},
 				'plant_type':{'label':'Type', 'type':'toggle', 'toggles':this.plantTypes},
 				'growth_pattern':{'label':'Growth', 'type':'toggle', 'toggles':this.growthPatterns},
+				'parts_used':{'label':'Parts Used', 'type':'flags', 'join':'yes', 'flags':this.partsUsed},
 			}},
 			'_warnings':{'label':'Warnings', 'aside':'yes', 'type':'simpleform', 'fields':{
 				'warnings':{'label':'', 'type':'textarea', 'size':'small', 'hidelabel':'yes'},
 			}},
-			'_10':{'label':'Common Names', 'aside':'yes', 'fields':{
-				'tag-10':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new common name:'},
-				}},
-			'_20':{'label':'Parts Used', 'aside':'yes', 'fields':{
-				'tag-20':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new part:'},
-				}},
 			'_30':{'label':'Uses', 'aside':'yes', 'fields':{
 				'tag-30':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new use:'},
 				}},
 			'_40':{'label':'Actions', 'aside':'yes', 'fields':{
 				'tag-40':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new action:'},
 				}},
-			'_contraindications':{'label':'Contraindications', 'type':'simpleform', 'fields':{
+			'_contraindications':{'label':'Contraindications', 'aside':'yes', 'type':'simpleform', 'fields':{
 				'contraindications':{'label':'', 'type':'textarea', 'size':'small', 'hidelabel':'yes'},
 			}},
 			'_quick_id':{'label':'Quick ID', 'type':'simpleform', 'fields':{
