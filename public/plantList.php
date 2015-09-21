@@ -182,7 +182,17 @@ function ciniki_materiamedica_plantList($ciniki) {
 	// Get the list of plants requested
 	//
 	$plants = array();
-	if( isset($args['tag_type']) && $args['tag_type'] == 'system' && isset($args['tag_name']) && $args['tag_name'] == 'Unknown' ) {
+	if( isset($args['tag_type']) && $args['tag_type'] == 'all' ) {
+		$strsql = "SELECT ciniki_materiamedica_plants.id, "
+			. "ciniki_materiamedica_plants.family, "
+			. "ciniki_materiamedica_plants.genus, "
+			. "ciniki_materiamedica_plants.species, "
+			. "ciniki_materiamedica_plants.common_name "
+			. "FROM ciniki_materiamedica_plants "
+			. "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+			. "ORDER BY family, genus, species "
+			. "";
+	} elseif( isset($args['tag_type']) && $args['tag_type'] == 'system' && isset($args['tag_name']) && $args['tag_name'] == 'Unknown' ) {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "
 			. "ciniki_materiamedica_plants.family, "
 			. "ciniki_materiamedica_plants.genus, "
