@@ -6,8 +6,10 @@ function ciniki_materiamedica_main() {
 		'1':{'name':'Hidden'},
 		};
 	this.tagTypes = {
-		'30':{'name':'Uses', 'arg':'uses', 'visible':'no'},
-		'40':{'name':'Actions', 'arg':'actions', 'visible':'no'},
+		'system':{'name':'Systems', 'arg':'system', 'visible':'yes'},
+		'action':{'name':'Actions', 'arg':'action', 'visible':'yes'},
+//		'30':{'name':'Uses', 'arg':'uses', 'visible':'no'},
+//		'40':{'name':'Actions', 'arg':'actions', 'visible':'no'},
 		};
 	this.plantTypes = {
 		'10':'Tree',
@@ -39,47 +41,78 @@ function ciniki_materiamedica_main() {
 			'ciniki_materiamedica_main', 'menu',
 			'mc', 'medium narrowaside', 'sectioned', 'ciniki.materiamedica.main.menu');
 		this.menu.data = {};
-		this.menu.formtab = '30';
+		this.menu.formtab = 'system';
 		this.menu.tag_name = '';
 		this.menu.formtabs = {'label':'', 'tabs':{
-			'30':{'label':'Uses', 'visible':'yes', 'fn':'M.ciniki_materiamedica_main.showMenu(null,30,\'\');'},
-			'40':{'label':'Actions', 'visible':'yes', 'fn':'M.ciniki_materiamedica_main.showMenu(null,40,\'\');'},
-			}},
+			'system':{'label':'Systems', 'visible':'yes', 'fn':'M.ciniki_materiamedica_main.showMenu(null,\'system\',\'\');'},
+			'action':{'label':'Actions', 'visible':'yes', 'fn':'M.ciniki_materiamedica_main.showMenu(null,\'action\',\'\');'},
+//			'30':{'label':'Uses', 'visible':'yes', 'fn':'M.ciniki_materiamedica_main.showMenu(null,30,\'\');'},
+//			'40':{'label':'Actions', 'visible':'yes', 'fn':'M.ciniki_materiamedica_main.showMenu(null,40,\'\');'},
+			}};
 		this.menu.forms = {};
-		this.menu.forms['30'] = {
+		this.menu.forms.system = {
 			'tags':{'label':'', 'aside':'yes', 'type':'simplegrid', 'num_cols':1},
-			'search':{'label':'', 'type':'livesearchgrid', 'livesearchcols':1, 'hint':'plant name', 
+			'search':{'label':'', 'type':'livesearchgrid', 'livesearchcols':2, 'hint':'plant name', 
 				'noData':'No plants found',
 				},
-			'plants':{'label':'Latest Plants', 'type':'simplegrid', 'num_cols':1,
-				'headerValues':['Genus-Species'],
-				'cellClasses':['multiline'],
-				'sortable':'yes', 'sortTypes':['text'],
+			'plants':{'label':'Latest Plants', 'type':'simplegrid', 'num_cols':2,
+				'headerValues':['Genus Species', 'Common'],
+				'cellClasses':['multiline', ''],
+				'sortable':'yes', 'sortTypes':['text', 'text'],
+				'addTxt':'Add Plant',
+				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);',
+				},
+			};
+		this.menu.forms.action = {
+			'tags':{'label':'', 'aside':'yes', 'type':'simplegrid', 'num_cols':1},
+			'search':{'label':'', 'type':'livesearchgrid', 'livesearchcols':2, 'hint':'plant name', 
+				'noData':'No plants found',
+				},
+			'plants':{'label':'Latest Plants', 'type':'simplegrid', 'num_cols':2,
+				'headerValues':['Genus Species', 'Common'],
+				'cellClasses':['multiline',''],
+				'sortable':'yes', 'sortTypes':['text', 'text'],
+				'addTxt':'Add Plant',
+				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);',
+				},
+			};
+		this.menu.forms['30'] = {
+			'tags':{'label':'', 'aside':'yes', 'type':'simplegrid', 'num_cols':1},
+			'search':{'label':'', 'type':'livesearchgrid', 'livesearchcols':2, 'hint':'plant name', 
+				'noData':'No plants found',
+				},
+			'plants':{'label':'Latest Plants', 'type':'simplegrid', 'num_cols':2,
+				'headerValues':['Genus Species', 'Common'],
+				'cellClasses':['multiline', ''],
+				'sortable':'yes', 'sortTypes':['text', 'text'],
 				'addTxt':'Add Plant',
 				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);',
 				},
 			};
 		this.menu.forms['40'] = {
 			'tags':{'label':'', 'aside':'yes', 'type':'simplegrid', 'num_cols':1},
-			'search':{'label':'', 'type':'livesearchgrid', 'livesearchcols':1, 'hint':'plant name', 
+			'search':{'label':'', 'type':'livesearchgrid', 'livesearchcols':2, 'hint':'plant name', 
 				'noData':'No plants found',
 				},
-			'plants':{'label':'Latest Plants', 'type':'simplegrid', 'num_cols':1,
-				'headerValues':['Genus-Species'],
-				'cellClasses':['multiline'],
-				'sortable':'yes', 'sortTypes':['text'],
+			'plants':{'label':'Latest Plants', 'type':'simplegrid', 'num_cols':2,
+				'headerValues':['Genus Species', 'Common'],
+				'cellClasses':['multiline', ''],
+				'sortable':'yes', 'sortTypes':['text', 'text'],
 				'addTxt':'Add Plant',
 				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);',
 				},
 			};
-		this.menu.sections = this.menu.forms['30'];	
+		this.menu.sections = this.menu.forms['system'];	
 		this.menu.cellValue = function(s, i, j, d) {
 			if( s == 'tags' ) {
 				return d.tag.tag_name + ' <span class="count">' + d.tag.num_plants + '</span>';
 			} 
 			else if( s == 'plants' || s == 'search' ) {
-				return '<span class="maintext">' + d.plant.genus + ' ' + d.plant.species + '</span>'
-					+ '<span class="subtext">' + d.plant.family + '</span>';
+				switch(j) {
+					case 0: return '<span class="maintext">' + d.plant.genus + ' ' + d.plant.species + '</span>'
+						+ '<span class="subtext">' + d.plant.family + '</span>';
+					case 1: return d.plant.common_name;
+				}
 			}
 		};
 		this.menu.rowFn = function(s, i, d) {
