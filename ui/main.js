@@ -78,7 +78,7 @@ function ciniki_materiamedica_main() {
 				return d.tag.tag_name + ' <span class="count">' + d.tag.num_plants + '</span>';
 			} 
 			else if( s == 'plants' || s == 'search' ) {
-				return '<span class="maintext">' + d.plant.genus + '-' + d.plant.species + '</span>'
+				return '<span class="maintext">' + d.plant.genus + ' ' + d.plant.species + '</span>'
 					+ '<span class="subtext">' + d.plant.family + '</span>';
 			}
 		};
