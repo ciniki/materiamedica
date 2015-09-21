@@ -20,7 +20,7 @@ function ciniki_materiamedica_plantImageGet($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
         'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
-		'plant_image_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Event Image'),
+		'plant_image_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plant Image'),
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;

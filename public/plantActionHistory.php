@@ -18,11 +18,11 @@
 // Returns
 // -------
 // <history>
-// <action user_id="2" date="May 12, 2012 10:54 PM" value="Plant Name" age="2 months" user_display_name="Andrew" />
+// <action user_id="2" date="May 12, 2012 10:54 PM" value="Action Name" age="2 months" user_display_name="Andrew" />
 // ...
 // </history>
 //
-function ciniki_materiamedica_plantHistory($ciniki) {
+function ciniki_materiamedica_plantActionHistory($ciniki) {
 	//
 	// Find all the required and optional arguments
 	//
@@ -41,7 +41,7 @@ function ciniki_materiamedica_plantHistory($ciniki) {
 	// Check access to business_id as owner, or sys admin
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-	$rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantHistory');
+	$rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantActionHistory');
 	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}

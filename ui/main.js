@@ -128,7 +128,7 @@ function ciniki_materiamedica_main() {
 			'_image':{'label':'Image', 'aside':'yes', 'fields':{
 				'image_id':{'label':'', 'type':'image_id', 'hidelabel':'yes', 'history':'no'},
 			}},
-			'info':{'label':'Public Information', 'aside':'yes', 'list':{
+			'info':{'label':'Details', 'aside':'yes', 'list':{
 				'name':{'label':'Name', 'type':'text'},
 				'common_name':{'label':'Common', 'type':'text'},
 				'type_growth':{'label':'Type', 'type':'text'},
@@ -147,7 +147,11 @@ function ciniki_materiamedica_main() {
 				'visible':function() {
 					return ((M.ciniki_materiamedica_main.plant.data.quick_id!=null&&M.ciniki_materiamedica_main.plant.data.quick_id!='')?'yes':'no');
 				}},
-			// Add tabs for additional information sections
+			'actions':{'label':'System Actions', 'type':'simplegrid', 'num_cols':2,
+				'headerValues':['System', 'Action'],
+				'addTxt':'Add',
+				'addFn':'M.ciniki_materiamedica_main.actionEdit(\'M.ciniki_materiamedica_main.plantShow()\',0,M.ciniki_materiamedica_main.plant.plant_id);',
+				},
 			'habitat':{'label':'Habitat', 'type':'htmlcontent'},
 			'cultivation':{'label':'Cultivation', 'type':'htmlcontent'},
 			'history':{'label':'History', 'type':'htmlcontent',
@@ -199,6 +203,19 @@ function ciniki_materiamedica_main() {
 		};
 		this.plant.noData = function(s) {
 			return '';
+		};
+		this.plant.cellValue = function(s, i, j, d) {
+			if( s == 'actions' ) {
+				switch(j) {
+					case 0: return d.action.system;
+					case 1: return d.action.action;
+				}
+			}
+		};
+		this.plant.rowFn = function(s, i, d) {
+			if( s == 'actions' ) {
+				return 'M.ciniki_materiamedica_main.actionEdit(\'M.ciniki_materiamedica_main.plantShow();\',\'' + d.action.id + '\');';
+			}
 		};
 		this.plant.prevButtonFn = function() {
 			if( this.prev_plant_id > 0 ) {
@@ -256,7 +273,7 @@ function ciniki_materiamedica_main() {
 			'_image':{'label':'Image', 'aside':'yes', 'fields':{
 				'image_id':{'label':'', 'type':'image_id', 'controls':'all', 'hidelabel':'yes', 'history':'no'},
 			}},
-			'info':{'label':'Public Information', 'aside':'yes', 'type':'simpleform', 'fields':{
+			'info':{'label':'Details', 'aside':'yes', 'type':'simpleform', 'fields':{
 				'family':{'label':'Family', 'type':'text'},
 				'genus':{'label':'Genus', 'type':'text'},
 				'species':{'label':'Species', 'type':'text'},
@@ -342,6 +359,62 @@ function ciniki_materiamedica_main() {
 		};
 		this.edit.addButton('save', 'Save', 'M.ciniki_materiamedica_main.plantSave();');
 		this.edit.addClose('Cancel');
+
+		//
+		// The panel to display the action form
+		//
+		this.action = new M.panel('Plant Action',
+			'ciniki_materiamedica_main', 'action',
+			'mc', 'medium', 'sectioned', 'ciniki.materiamedica.main.action');
+		this.action.action_id = 0;
+		this.action.plant_id = 0;
+		this.action.data = null;
+		this.action.sections = {
+			'info':{'label':'Details', 'aside':'yes', 'type':'simpleform', 'fields':{
+				'system':{'label':'System', 'type':'text', 'livesearch':'yes', 'livesearchempty':'yes'},
+				'action':{'label':'Action', 'type':'text', 'livesearch':'yes', 'livesearchempty':'yes'},
+			}},
+			'_notes':{'label':'Notes', 'aside':'yes', 'type':'simpleform', 'fields':{
+				'notes':{'label':'', 'type':'textarea', 'size':'large', 'hidelabel':'yes'},
+			}},
+			'_buttons':{'label':'', 'buttons':{
+				'save':{'label':'Save', 'fn':'M.ciniki_materiamedica_main.actionSave();'},
+				'delete':{'label':'Delete', 'fn':'M.ciniki_materiamedica_main.actionDelete();'},
+			}},
+		};
+		this.action.fieldValue = function(s, i, d) { 
+			return this.data[i]; 
+		}
+		this.action.sectionData = function(s) {
+			return this.data[s];
+		};
+		this.action.liveSearchCb = function(s, i, value) {
+			if( i == 'system' || i == 'action' ) {
+				var rsp = M.api.getJSONBgCb('ciniki.materiamedica.plantActionSearchField', {'business_id':M.curBusinessID, 'field':i, 'start_needle':value, 'limit':15},
+					function(rsp) {
+						M.ciniki_materiamedica_main.action.liveSearchShow(s, i, M.gE(M.ciniki_materiamedica_main.action.panelUID + '_' + i), rsp.results);
+					});
+			}
+		};
+		this.action.liveSearchResultValue = function(s, f, i, j, d) {
+			if( (f == 'system' || f == 'action' ) && d.result != null ) { return d.result.name; }
+			return '';
+		};
+		this.action.liveSearchResultRowFn = function(s, f, i, j, d) { 
+			if( (f == 'system' || f == 'action' ) && d.result != null ) {
+				return 'M.ciniki_materiamedica_main.action.updateField(\'' + s + '\',\'' + f + '\',\'' + escape(d.result.name) + '\');';
+			}
+		};
+		this.action.updateField = function(s, fid, result) {
+			M.gE(this.panelUID + '_' + fid).value = unescape(result);
+			this.removeLiveSearch(s, fid);
+		};
+		this.action.fieldHistoryArgs = function(s, i) {
+			return {'method':'ciniki.materiamedica.plantActionHistory', 'args':{'business_id':M.curBusinessID, 
+				'action_id':this.action_id, 'field':i}};
+		}
+		this.action.addButton('save', 'Save', 'M.ciniki_materiamedica_main.actionSave();');
+		this.action.addClose('Cancel');
 	}
 
 	this.start = function(cb, appPrefix, aG) {
@@ -390,7 +463,7 @@ function ciniki_materiamedica_main() {
 
 		var rsp = M.api.getJSONCb('ciniki.materiamedica.plantGet', 
 			{'business_id':M.curBusinessID, 'plant_id':M.ciniki_materiamedica_main.plant.plant_id,
-			'images':'yes', 'tags':'yes'}, function(rsp) {
+			'images':'yes', 'tags':'yes', 'actions':'yes'}, function(rsp) {
 				if( rsp.stat != 'ok' ) {
 					M.api.err(rsp);
 					return false;
@@ -525,6 +598,84 @@ function ciniki_materiamedica_main() {
 						return false;
 					}
 					M.ciniki_materiamedica_main.edit.close();
+				});
+		}
+	};
+
+	//
+	// Manage the actions for a plant
+	//
+	this.actionEdit = function(cb, aid, pid) {
+		if( aid != null ) { this.action.action_id = aid; }
+		if( pid != null ) { this.action.plant_id = pid; }
+		if( this.action.action_id == 0 ) {
+			this.action.reset();
+			this.action.sections._buttons.buttons.delete.visible = 'no';
+		} else {
+			this.action.sections._buttons.buttons.delete.visible = 'yes';
+		}
+		M.api.getJSONCb('ciniki.materiamedica.plantActionGet', {'business_id':M.curBusinessID, 'action_id':this.action.action_id}, function(rsp) {
+			if( rsp.stat != 'ok' ) {
+				M.api.err(rsp);
+				return false;
+			}
+			var p = M.ciniki_materiamedica_main.action;
+			p.data = rsp.action;
+			p.refresh();
+			p.show(cb);
+		});
+	};
+
+	this.actionSave = function() {
+		// Check form values
+		var nv = this.action.formFieldValue(this.action.sections.info.fields.system, 'system');
+		if( nv != this.action.fieldValue('info', 'system') && nv == '' ) {
+			alert('You must specifiy a system');
+			return false;
+		}
+		var nv = this.action.formFieldValue(this.action.sections.info.fields.action, 'action');
+		if( nv != this.action.fieldValue('info', 'action') && nv == '' ) {
+			alert('You must specifiy a action');
+			return false;
+		}
+		if( this.action.action_id > 0 ) {
+			var c = this.action.serializeForm('no');
+			if( c != '' ) {
+				var rsp = M.api.postJSONFormData('ciniki.materiamedica.plantActionUpdate', 
+					{'business_id':M.curBusinessID, 'action_id':this.action.action_id}, c,
+						function(rsp) {
+							if( rsp.stat != 'ok' ) {
+								M.api.err(rsp);
+								return false;
+							} else {
+								M.ciniki_materiamedica_main.action.close();
+							}
+						});
+			} else {
+				M.ciniki_materiamedica_main.action.close();
+			}
+		} else {
+			var c = this.action.serializeForm('yes');
+			var rsp = M.api.postJSONFormData('ciniki.materiamedica.plantActionAdd', {'business_id':M.curBusinessID, 'plant_id':this.action.plant_id}, c, function(rsp) {
+				if( rsp.stat != 'ok' ) {
+					M.api.err(rsp);
+					return false;
+				} else {
+					M.ciniki_materiamedica_main.action.close();
+				}
+			});
+		}
+	};
+
+	this.actionDelete = function() {
+		if( confirm('Are you sure you want to delete this action?') ) {
+			var rsp = M.api.getJSONCb('ciniki.materiamedica.plantActionDelete', 
+				{'business_id':M.curBusinessID, 'action_id':this.action.action_id}, function(rsp) {
+					if( rsp.stat != 'ok' ) {
+						M.api.err(rsp);
+						return false;
+					}
+					M.ciniki_materiamedica_main.action.close();
 				});
 		}
 	};

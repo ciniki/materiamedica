@@ -36,11 +36,23 @@ function ciniki_materiamedica_objects($ciniki) {
 			),
 		'history_table'=>'ciniki_materiamedica_history',
 		);
+	$objects['plant_action'] = array(
+		'name'=>'Plant Action',
+		'sync'=>'yes',
+		'table'=>'ciniki_materiamedica_plant_actions',
+		'fields'=>array(
+			'plant_id'=>array('ref'=>'ciniki.materiamedica.plant'),
+			'system'=>array(),
+			'action'=>array(),
+			'notes'=>array('default'=>''),
+			),
+		'history_table'=>'ciniki_materiamedica_history',
+		);
 	$objects['plant_tag'] = array(
 		'name'=>'Plant Tag',
 		'sync'=>'yes',
 		'table'=>'ciniki_materiamedica_plant_tags',
-			'fields'=>array(
+		'fields'=>array(
 			'plant_id'=>array('ref'=>'ciniki.materiamedica.plant'),
 			'tag_type'=>array(),
 			'tag_name'=>array(),

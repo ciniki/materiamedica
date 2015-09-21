@@ -58,7 +58,7 @@ function ciniki_materiamedica_plantImageUpdate(&$ciniki) {
 		return $rc;
 	}
 	if( !isset($rc['item']) ) {
-		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2564', 'msg'=>'Event image not found'));
+		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2564', 'msg'=>'Plant image not found'));
 	}
 	$item = $rc['item'];
 
