@@ -583,14 +583,14 @@ function ciniki_materiamedica_main() {
 			}
 			var p = M.ciniki_materiamedica_main.edit;
 			p.data = rsp.plant;
-			for(i in M.ciniki_materiamedica_main.tagTypes) {
-				p.sections['_'+i].fields['tag-'+i].tags = [];
-			}
-			if( rsp.tags != null ) {
-				for(i in rsp.tags) {
-					p.sections['_'+rsp.tags[i].tag_type].fields[i].tags = rsp.tags[i].tag_names.split(/::/);
-				}
-			}
+//			for(i in M.ciniki_materiamedica_main.tagTypes) {
+//				p.sections['_'+i].fields['tag-'+i].tags = [];
+//			}
+//			if( rsp.tags != null ) {
+//				for(i in rsp.tags) {
+//					p.sections['_'+rsp.tags[i].tag_type].fields[i].tags = rsp.tags[i].tag_names.split(/::/);
+//				}
+//			}
 			p.refresh();
 			p.show(cb);
 		});
