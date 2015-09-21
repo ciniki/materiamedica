@@ -6,10 +6,10 @@ function ciniki_materiamedica_main() {
 		'1':{'name':'Hidden'},
 		};
 	this.tagTypes = {
-		'system':{'name':'Systems', 'arg':'system', 'visible':'yes'},
-		'action':{'name':'Actions', 'arg':'action', 'visible':'yes'},
-//		'30':{'name':'Uses', 'arg':'uses', 'visible':'no'},
-//		'40':{'name':'Actions', 'arg':'actions', 'visible':'no'},
+//		'system':{'name':'Systems', 'arg':'system', 'visible':'yes'},
+//		'action':{'name':'Actions', 'arg':'action', 'visible':'yes'},
+		'30':{'name':'Uses', 'arg':'uses', 'visible':'no'},
+		'40':{'name':'Actions', 'arg':'actions', 'visible':'no'},
 		};
 	this.plantTypes = {
 		'10':'Tree',
