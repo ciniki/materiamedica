@@ -71,6 +71,7 @@ create table ciniki_materiamedica_plants (
 	growth_pattern tinyint unsigned not null,
 	parts_used tinyint unsigned not null,
 	image_id int not null,
+	image_caption varchar(250) not null,
 	habitat text not null,
 	cultivation text not null,
 	history text not null,
@@ -85,4 +86,4 @@ create table ciniki_materiamedica_plants (
 	unique index (uuid),
 	unique index (family, genus, species),
 	index sync (business_id, uuid, last_updated)
-) ENGINE='InnoDB', COMMENT='v1.01';
+) ENGINE='InnoDB', COMMENT='v1.02';

@@ -75,6 +75,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
 			'parts_used'=>'0',
 			'permalink'=>'',
 			'image_id'=>'0',
+			'image_caption'=>'',
 			'habitat'=>'',
 			'cultivation'=>'',
 			'history'=>'',
@@ -98,6 +99,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
 			. "ciniki_materiamedica_plants.parts_used, "
 			. "ciniki_materiamedica_plants.parts_used AS parts_used_text, "
 			. "ciniki_materiamedica_plants.image_id, "
+			. "ciniki_materiamedica_plants.image_caption, "
 			. "ciniki_materiamedica_plants.habitat, "
 			. "ciniki_materiamedica_plants.cultivation, "
 			. "ciniki_materiamedica_plants.history, "
@@ -115,7 +117,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
 			array('container'=>'plants', 'fname'=>'id', 'name'=>'plant',
 				'fields'=>array('id', 'family', 'genus', 'species', 'common_name', 'permalink', 
 					'plant_type', 'plant_type_text', 'growth_pattern', 'growth_pattern_text', 
-					'image_id', 'habitat', 'cultivation', 
+					'image_id', 'image_caption', 'habitat', 'cultivation', 
 					'history', 'warnings', 'contraindications', 'quick_id', 'notes', 'reference_notes'),
 				'maps'=>array('plant_type_text'=>$maps['plant']['plant_type'],
 					'growth_pattern_text'=>$maps['plant']['growth_pattern'],

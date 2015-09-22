@@ -31,6 +31,7 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
         'growth_pattern'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Growth Pattern'), 
         'parts_used'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Parts Used'), 
 		'image_id'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'0', 'name'=>'Image'),
+        'image_caption'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Image Caption'), 
         'habitat'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Habitat'), 
         'cultivation'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Cultivation'), 
         'history'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'History'), 
@@ -46,6 +47,7 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
         return $rc;
     }   
     $args = $rc['args'];
+	error_log(print_r($args, true));
 
     //  
     // Make sure this module is activated, and

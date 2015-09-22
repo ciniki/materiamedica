@@ -31,6 +31,7 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
         'growth_pattern'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Growth Pattern'), 
         'parts_used'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Parts Used'), 
 		'image_id'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'0', 'name'=>'Image'),
+        'image_caption'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Image Caption'), 
         'habitat'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Habitat'), 
         'cultivation'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Cultivation'), 
         'history'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'History'), 

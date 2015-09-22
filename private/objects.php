@@ -25,6 +25,7 @@ function ciniki_materiamedica_objects($ciniki) {
 			'growth_pattern'=>array(),
 			'parts_used'=>array(),
 			'image_id'=>array('ref'=>'ciniki.images.image'),
+			'image_caption'=>array('default'=>''),
 			'habitat'=>array(),
 			'cultivation'=>array(),
 			'history'=>array(),

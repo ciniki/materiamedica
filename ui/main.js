@@ -178,6 +178,10 @@ function ciniki_materiamedica_main() {
 			'_image':{'label':'Image', 'aside':'yes', 'fields':{
 				'image_id':{'label':'', 'type':'image_id', 'hidelabel':'yes', 'history':'no'},
 			}},
+			'image_caption':{'label':'', 'aside':'yes', 'type':'htmlcontent',
+				'visible':function() {
+					return ((M.ciniki_materiamedica_main.plant.data.image_caption!=null&&M.ciniki_materiamedica_main.plant.data.image_caption!='')?'yes':'no');
+				}},
 			'info':{'label':'Details', 'aside':'yes', 'list':{
 				'name':{'label':'Name', 'type':'text'},
 				'common_name':{'label':'Common', 'type':'text'},
@@ -322,6 +326,9 @@ function ciniki_materiamedica_main() {
 		this.edit.sections = {
 			'_image':{'label':'Image', 'aside':'yes', 'fields':{
 				'image_id':{'label':'', 'type':'image_id', 'controls':'all', 'hidelabel':'yes', 'history':'no'},
+			}},
+			'_image_caption':{'label':'', 'aside':'yes', 'fields':{
+				'image_caption':{'label':'Caption', 'type':'text'},
 			}},
 			'info':{'label':'Details', 'aside':'yes', 'type':'simpleform', 'fields':{
 				'family':{'label':'Family', 'type':'text'},
