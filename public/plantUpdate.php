@@ -47,7 +47,6 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
         return $rc;
     }   
     $args = $rc['args'];
-	error_log(print_r($args, true));
 
     //  
     // Make sure this module is activated, and
