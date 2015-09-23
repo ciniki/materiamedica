@@ -23,7 +23,7 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
         'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
-        'family'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Family'), 
+        'family'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Family'), 
         'genus'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Genus'), 
         'species'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Species'), 
         'common_name'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Common Name'), 
@@ -48,9 +48,6 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
     }   
     $args = $rc['args'];
 
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'makePermalink');
-	$args['permalink'] = ciniki_core_makePermalink($ciniki, $args['family'] . '-' . $args['genus'] . '-' . $args['species']);
-    
     //  
     // Make sure this module is activated, and
     // check permission to run this function for this business
@@ -61,6 +58,16 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
         return $rc;
     }   
 
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'makePermalink');
+	$args['permalink'] = ciniki_core_makePermalink($ciniki, $args['genus'] . '-' . $args['species']);
+
+	// 
+	// Force lowercase on species
+	//
+	$args['genus'] = ucfirst(strtolower($args['genus']));
+	$args['species'] = strtolower($args['species']);
+	
+    
 	//
 	// Check the permalink doesn't already exist
 	//

@@ -71,6 +71,8 @@ function ciniki_materiamedica_objects($ciniki) {
 			'permalink'=>array(),
 			'flags'=>array('default'=>'0'),
 			'parts'=>array('default'=>'0'),
+			'location'=>array('default'=>''),
+			'date_taken'=>array('default'=>''),
 			'webflags'=>array('default'=>'0'),
 			'image_id'=>array('ref'=>'ciniki.images.image'),
 			'description'=>array(),

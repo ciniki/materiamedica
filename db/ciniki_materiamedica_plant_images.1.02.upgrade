@@ -1,0 +1,5 @@
+#
+#
+ALTER TABLE ciniki_materiamedica_plant_images ADD COLUMN location varchar(250) not null AFTER parts;
+ALTER TABLE ciniki_materiamedica_plant_images ADD COLUMN date_taken date not null AFTER location;
+ALTER TABLE ciniki_materiamedica_plant_images COMMENT='v1.02';

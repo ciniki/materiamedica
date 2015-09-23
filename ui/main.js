@@ -123,7 +123,7 @@ function ciniki_materiamedica_main() {
 			} 
 			else if( s == 'plants' || s == 'search' ) {
 				switch(j) {
-					case 0: return '<span class="maintext">' + d.plant.genus + ' ' + d.plant.species + '</span>'
+					case 0: return '<span class="maintext"><i>' + d.plant.genus + ' ' + d.plant.species + '</i></span>'
 						+ '<span class="subtext">' + d.plant.family + '</span>';
 					case 1: return d.plant.common_name;
 				}
@@ -178,13 +178,10 @@ function ciniki_materiamedica_main() {
 			'_image':{'label':'Image', 'aside':'yes', 'fields':{
 				'image_id':{'label':'', 'type':'image_id', 'hidelabel':'yes', 'history':'no'},
 			}},
-			'image_caption':{'label':'', 'aside':'yes', 'type':'htmlcontent',
-				'visible':function() {
-					return ((M.ciniki_materiamedica_main.plant.data.image_caption!=null&&M.ciniki_materiamedica_main.plant.data.image_caption!='')?'yes':'no');
-				}},
 			'info':{'label':'Details', 'aside':'yes', 'list':{
 				'name':{'label':'Name', 'type':'text'},
 				'common_name':{'label':'Common', 'type':'text'},
+				'family':{'label':'Family', 'type':'text'},
 				'type_growth':{'label':'Type', 'type':'text'},
 //				'tag-30':{'label':'Uses', 'visible':'yes'},
 //				'tag-40':{'label':'Actions', 'visible':'yes'},
@@ -223,7 +220,7 @@ function ciniki_materiamedica_main() {
 			'images':{'label':'Additional Images', 'type':'simplethumbs'},
 			'_images':{'label':'', 'type':'simplegrid', 'num_cols':1,
 				'addTxt':'Add Image',
-				'addFn':'M.startApp(\'ciniki.materiamedica.plantimages\',null,\'M.ciniki_materiamedica_main.plantShow();\',\'mc\',{\'plant_id\':M.ciniki_materiamedica_main.plant.plant_id,\'add\':\'yes\'})',
+				'addFn':'M.startApp(\'ciniki.materiamedica.plantimages\',null,\'M.ciniki_materiamedica_main.plantShow();\',\'mc\',{\'plant_id\':M.ciniki_materiamedica_main.plant.plant_id,\'title\':M.ciniki_materiamedica_main.plant.data.genus + \' \' + M.ciniki_materiamedica_main.plant.data.species,\'add\':\'yes\'})',
 				},
 			'_buttons':{'label':'', 'buttons':{
 				'edit':{'label':'Edit', 'fn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.plantShow();\',M.ciniki_materiamedica_main.plant.plant_id);'},
@@ -242,7 +239,7 @@ function ciniki_materiamedica_main() {
 			}
 		};
 		this.plant.listValue = function(s, i, d) {
-			if( s == 'info' && i == 'name' ) { return this.data.family + ' ' + this.data.genus + ' ' + this.data.species; }
+			if( s == 'info' && i == 'name' ) { return '<i>' + this.data.genus + ' ' + this.data.species + '</i>'; }
 			if( s == 'info' && i == 'type_growth' ) { return this.data.plant_type_text + ' - ' + this.data.growth_pattern_text; }
 			if( i.match(/tag-/) ) { 
 				if( this.data[i] != null ) {
@@ -284,7 +281,7 @@ function ciniki_materiamedica_main() {
 			return null;
 		};
 		this.plant.thumbFn = function(s, i, d) {
-			return 'M.startApp(\'ciniki.materiamedica.plantimages\',null,\'M.ciniki_materiamedica_main.plantShow();\',\'mc\',{\'plant_image_id\':\'' + d.image.id + '\'});';
+			return 'M.startApp(\'ciniki.materiamedica.plantimages\',null,\'M.ciniki_materiamedica_main.plantShow();\',\'mc\',{\'plant_image_id\':\'' + d.image.id + '\',\'title\':M.ciniki_materiamedica_main.plant.data.genus + \' \' + M.ciniki_materiamedica_main.plant.data.species});';
 		};
 		this.plant.addDropImage = function(iid) {
 			var rsp = M.api.getJSON('ciniki.materiamedica.plantImageAdd',
@@ -324,17 +321,17 @@ function ciniki_materiamedica_main() {
 		this.edit.plant_id = 0;
 		this.edit.data = null;
 		this.edit.sections = {
-			'_image':{'label':'Image', 'aside':'yes', 'fields':{
-				'image_id':{'label':'', 'type':'image_id', 'controls':'all', 'hidelabel':'yes', 'history':'no'},
-			}},
-			'_image_caption':{'label':'', 'aside':'yes', 'fields':{
-				'image_caption':{'label':'Caption', 'type':'text'},
-			}},
+//			'_image':{'label':'Image', 'aside':'yes', 'fields':{
+//				'image_id':{'label':'', 'type':'image_id', 'controls':'all', 'hidelabel':'yes', 'history':'no'},
+//			}},
+//			'_image_caption':{'label':'', 'aside':'yes', 'fields':{
+//				'image_caption':{'label':'Caption', 'type':'text'},
+//			}},
 			'info':{'label':'Details', 'aside':'yes', 'type':'simpleform', 'fields':{
-				'family':{'label':'Family', 'type':'text'},
-				'genus':{'label':'Genus', 'type':'text'},
-				'species':{'label':'Species', 'type':'text'},
-				'common_name':{'label':'Common', 'type':'text'},
+				'family':{'label':'Family', 'type':'text', 'livesearch':'yes'},
+				'genus':{'label':'Genus', 'type':'text', 'livesearch':'yes'},
+				'species':{'label':'Species', 'type':'text', 'livesearch':'yes'},
+				'common_name':{'label':'Common', 'type':'text', 'livesearch':'yes'},
 				'plant_type':{'label':'Type', 'type':'toggle', 'toggles':this.plantTypes},
 				'growth_pattern':{'label':'Growth', 'type':'toggle', 'toggles':this.growthPatterns},
 				'parts_used':{'label':'Parts Used', 'type':'flags', 'join':'yes', 'flags':this.partsUsed},
@@ -351,7 +348,7 @@ function ciniki_materiamedica_main() {
 			'_contraindications':{'label':'Contraindications', 'aside':'yes', 'type':'simpleform', 'fields':{
 				'contraindications':{'label':'', 'type':'textarea', 'size':'small', 'hidelabel':'yes'},
 			}},
-			'_quick_id':{'label':'Quick ID', 'type':'simpleform', 'fields':{
+			'_quick_id':{'label':'Quick ID', 'aside':'yes', 'type':'simpleform', 'fields':{
 				'quick_id':{'label':'', 'type':'textarea', 'size':'small', 'hidelabel':'yes'},
 			}},
 			'_habitat':{'label':'Habitat', 'type':'simpleform', 'fields':{
@@ -381,19 +378,19 @@ function ciniki_materiamedica_main() {
 			return this.data[s];
 		};
 		this.edit.liveSearchCb = function(s, i, value) {
-			if( i == 'family' || i == 'genus' || i == 'species' ) {
-				var rsp = M.api.getJSONBgCb('ciniki.materiamedica.searchField', {'business_id':M.curBusinessID, 'field':i, 'start_needle':value, 'limit':15},
+			if( i == 'family' || i == 'genus' || i == 'species' || i == 'common_name' ) {
+				var rsp = M.api.getJSONBgCb('ciniki.materiamedica.plantSearchField', {'business_id':M.curBusinessID, 'field':i, 'start_needle':value, 'limit':15},
 					function(rsp) {
 						M.ciniki_materiamedica_main.edit.liveSearchShow(s, i, M.gE(M.ciniki_materiamedica_main.edit.panelUID + '_' + i), rsp.results);
 					});
 			}
 		};
 		this.edit.liveSearchResultValue = function(s, f, i, j, d) {
-			if( (f == 'family' || f == 'genus' || f == 'species' ) && d.result != null ) { return d.result.name; }
+			if( (f == 'family' || f == 'genus' || f == 'species' || f == 'common_name' ) && d.result != null ) { return d.result.name; }
 			return '';
 		};
 		this.edit.liveSearchResultRowFn = function(s, f, i, j, d) { 
-			if( (f == 'family' || f == 'genus' || f == 'species' )
+			if( (f == 'family' || f == 'genus' || f == 'species' || f == 'common_name' )
 				&& d.result != null ) {
 				return 'M.ciniki_materiamedica_main.edit.updateField(\'' + s + '\',\'' + f + '\',\'' + escape(d.result.name) + '\');';
 			}
@@ -605,11 +602,6 @@ function ciniki_materiamedica_main() {
 
 	this.plantSave = function() {
 		// Check form values
-		var nv = this.edit.formFieldValue(this.edit.sections.info.fields.family, 'family');
-		if( nv != this.edit.fieldValue('info', 'family') && nv == '' ) {
-			alert('You must specifiy a family');
-			return false;
-		}
 		var nv = this.edit.formFieldValue(this.edit.sections.info.fields.genus, 'genus');
 		if( nv != this.edit.fieldValue('info', 'genus') && nv == '' ) {
 			alert('You must specifiy a genus');

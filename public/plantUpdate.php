@@ -58,6 +58,16 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
         return $rc;
     }
 
+	// 
+	// Force lowercase on species
+	//
+	if( isset($args['genus']) ) {
+		$args['genus'] = ucfirst(strtolower($args['genus']));
+	}
+	if( isset($args['species']) ) {
+		$args['species'] = strtolower($args['species']);
+	}
+	
 	//
 	// Get the existing plant
 	//
@@ -78,9 +88,7 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
 	if( isset($args['family']) || isset($args['genus']) || isset($args['species']) ) {
 		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'makePermalink');
 		$args['permalink'] = ciniki_core_makePermalink($ciniki, 
-			(isset($args['family'])?$args['family']:$plant['family']) 
-			. '-' . (isset($args['genus'])?$args['genus']:$plant['genus']) 
-			. '-' . (isset($args['species'])?$args['species']:$plant['species'])
+			(isset($args['genus'])?$args['genus']:$plant['genus']) . '-' . (isset($args['species'])?$args['species']:$plant['species'])
 			);
 		//
 		// Make sure the permalink is unique

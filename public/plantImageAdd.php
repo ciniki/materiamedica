@@ -22,8 +22,11 @@ function ciniki_materiamedica_plantImageAdd(&$ciniki) {
         'permalink'=>array('required'=>'no', 'default'=>'', 'blank'=>'yes', 'name'=>'Permalink'), 
         'flags'=>array('required'=>'no', 'default'=>'0', 'blank'=>'yes', 'name'=>'Flags'), 
         'parts'=>array('required'=>'no', 'default'=>'0', 'blank'=>'yes', 'name'=>'Plant Parts'), 
+        'location'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Location'), 
+        'date_taken'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'date', 'name'=>'Date'), 
         'webflags'=>array('required'=>'no', 'default'=>'0', 'blank'=>'yes', 'name'=>'Website Flags'), 
 		'image_id'=>array('required'=>'yes', 'blank'=>'yes', 'name'=>'Image'),
+		'primary_image'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Make Primary Image'),
         'description'=>array('required'=>'no', 'default'=>'', 'blank'=>'yes', 'name'=>'Description'), 
         )); 
     if( $rc['stat'] != 'ok' ) { 
@@ -83,10 +86,53 @@ function ciniki_materiamedica_plantImageAdd(&$ciniki) {
 		return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2561', 'msg'=>'No plant specified'));
 	}
    
+	//  
+	// Turn off autocommit
+	//  
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionStart');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionRollback');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbTransactionCommit');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
+	$rc = ciniki_core_dbTransactionStart($ciniki, 'ciniki.materiamedica');
+	if( $rc['stat'] != 'ok' ) { 
+		return $rc;
+	}   
+
 	//
 	// Add the plant image to the database
 	//
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectAdd');
-	return ciniki_core_objectAdd($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_image', $args, 0x07);
+	$rc = ciniki_core_objectAdd($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_image', $args, 0x04);
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+	$plant_image_id = $rc['id'];
+
+	//
+	// Check if this image should be the primary
+	//
+	if( isset($args['primary_image']) && $args['primary_image'] == 'yes' ) {
+		$rc = ciniki_core_objectUpdate($ciniki, $args['business_id'], 'ciniki.materiamedica.plant', $item['plant_id'], array('image_id'=>$image['image_id']), 0x04);
+		if( $rc['stat'] != 'ok' ) {
+			return $rc;
+		}
+	}
+
+	//
+	// Commit the database changes
+	//
+    $rc = ciniki_core_dbTransactionCommit($ciniki, 'ciniki.materiamedica');
+	if( $rc['stat'] != 'ok' ) {
+		return $rc;
+	}
+
+	//
+	// Update the last_change date in the business modules
+	// Ignore the result, as we don't want to stop user updates if this fails.
+	//
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
+	ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'materiamedica');
+
+	return array('stat'=>'ok', 'id'=>$plant_image_id);
 }
 ?>
