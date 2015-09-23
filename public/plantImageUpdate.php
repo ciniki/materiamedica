@@ -111,13 +111,34 @@ function ciniki_materiamedica_plantImageUpdate(&$ciniki) {
 		return $rc;
 	}
 
+	$image_id = (isset($args['image_id'])?$args['image_id']:$item['image_id']);
+
 	//
 	// Check if this image should be the primary
 	//
-	if( isset($args['primary_image']) && $args['primary_image'] == 'yes' ) {
-		$rc = ciniki_core_objectUpdate($ciniki, $args['business_id'], 'ciniki.materiamedica.plant', $item['plant_id'], array('image_id'=>$item['image_id']), 0x04);
-		if( $rc['stat'] != 'ok' ) {
-			return $rc;
+	if( isset($args['primary_image']) ) {
+		if( $args['primary_image'] == 'yes' ) {
+			$rc = ciniki_core_objectUpdate($ciniki, $args['business_id'], 'ciniki.materiamedica.plant', $item['plant_id'], array('image_id'=>$image_id), 0x04);
+			if( $rc['stat'] != 'ok' ) {
+				return $rc;
+			}
+		} elseif( $args['primary_image'] == 'no' ) {
+			$strsql = "SELECT image_id "
+				. "FROM ciniki_materiamedica_plants "
+				. "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+				. "AND id = '" . ciniki_core_dbQuote($ciniki, $item['plant_id']) . "' "
+				. "";
+			$rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.materiamedica', 'plant');
+			if( $rc['stat'] != 'ok' ) {
+				return $rc;
+			}
+			// Check if primary image should be removed
+			if( isset($rc['plant']['image_id']) && $rc['plant']['image_id'] == $image_id ) {
+				$rc = ciniki_core_objectUpdate($ciniki, $args['business_id'], 'ciniki.materiamedica.plant', $item['plant_id'], array('image_id'=>0), 0x04);
+				if( $rc['stat'] != 'ok' ) {
+					return $rc;
+				}
+			}
 		}
 	}
 

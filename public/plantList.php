@@ -190,7 +190,7 @@ function ciniki_materiamedica_plantList($ciniki) {
 			. "ciniki_materiamedica_plants.common_name "
 			. "FROM ciniki_materiamedica_plants "
 			. "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-			. "ORDER BY family, genus, species "
+			. "ORDER BY genus, species "
 			. "";
 	} elseif( isset($args['tag_type']) && $args['tag_type'] == 'system' && isset($args['tag_name']) && $args['tag_name'] == 'Unknown' ) {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "
@@ -206,7 +206,7 @@ function ciniki_materiamedica_plantList($ciniki) {
 				. ") "
 			. "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 			. "AND ISNULL(ciniki_materiamedica_plant_actions.id) "
-			. "ORDER BY family, genus, species "
+			. "ORDER BY genus, species "
 			. "";
 	} elseif( isset($args['tag_type']) && $args['tag_type'] == 'action' && isset($args['tag_name']) && $args['tag_name'] == 'Unknown' ) {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "
@@ -222,7 +222,7 @@ function ciniki_materiamedica_plantList($ciniki) {
 				. ") "
 			. "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 			. "AND ISNULL(ciniki_materiamedica_plant_actions.id) "
-			. "ORDER BY family, genus, species "
+			. "ORDER BY genus, species "
 			. "";
 	}
 	elseif( isset($args['tag_type']) && $args['tag_type'] != '' && isset($args['tag_name']) && $args['tag_name'] == 'Unknown' ) {
@@ -239,7 +239,7 @@ function ciniki_materiamedica_plantList($ciniki) {
 				. ") "
 			. "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 			. "AND ISNULL(ciniki_materiamedica_plant_tags.tag_name) "
-			. "ORDER BY family, genus, species "
+			. "ORDER BY genus, species "
 			. "";
 	} elseif( isset($args['tag_type']) && $args['tag_type'] == 'system' && isset($args['tag_name']) && $args['tag_name'] != '' ) {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "	
@@ -252,7 +252,7 @@ function ciniki_materiamedica_plantList($ciniki) {
 			. "AND ciniki_materiamedica_plant_actions.system = '" . ciniki_core_dbQuote($ciniki, $args['tag_name']) . "' "
 			. "AND ciniki_materiamedica_plant_actions.plant_id = ciniki_materiamedica_plants.id "
 			. "AND ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-			. "ORDER BY family, genus, species "
+			. "ORDER BY genus, species "
 			. "";
 	} elseif( isset($args['tag_type']) && $args['tag_type'] == 'action' && isset($args['tag_name']) && $args['tag_name'] != '' ) {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "	
@@ -265,7 +265,7 @@ function ciniki_materiamedica_plantList($ciniki) {
 			. "AND ciniki_materiamedica_plant_actions.action = '" . ciniki_core_dbQuote($ciniki, $args['tag_name']) . "' "
 			. "AND ciniki_materiamedica_plant_actions.plant_id = ciniki_materiamedica_plants.id "
 			. "AND ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-			. "ORDER BY family, genus, species "
+			. "ORDER BY genus, species "
 			. "";
 	} elseif( isset($args['tag_type']) && $args['tag_type'] != '' && isset($args['tag_name']) && $args['tag_name'] != '' ) {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "	
@@ -279,7 +279,7 @@ function ciniki_materiamedica_plantList($ciniki) {
 			. "AND ciniki_materiamedica_plant_tags.tag_name = '" . ciniki_core_dbQuote($ciniki, $args['tag_name']) . "' "
 			. "AND ciniki_materiamedica_plant_tags.plant_id = ciniki_materiamedica_plants.id "
 			. "AND ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-			. "ORDER BY family, genus, species "
+			. "ORDER BY genus, species "
 			. "";
 	} elseif( isset($args['tag_type']) && $args['tag_type'] != '' ) {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "	
@@ -292,7 +292,7 @@ function ciniki_materiamedica_plantList($ciniki) {
 			. "AND ciniki_materiamedica_plant_tags.tag_type = '" . ciniki_core_dbQuote($ciniki, $args['tag_type']) . "' "
 			. "AND ciniki_materiamedica_plant_tags.plant_id = ciniki_materiamedica_plants.id "
 			. "AND ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-			. "ORDER BY family, genus, species "
+			. "ORDER BY genus, species "
 			. "";
 	} else {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "
@@ -302,7 +302,7 @@ function ciniki_materiamedica_plantList($ciniki) {
 			. "ciniki_materiamedica_plants.common_name "
 			. "FROM ciniki_materiamedica_plants "
 			. "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-			. "ORDER BY last_updated "
+			. "ORDER BY genus, species "
 			. "";
 		if( isset($args['limit']) && $args['limit'] != '' && $args['limit'] > 0 ) {
 			$strsql .= "LIMIT " . ciniki_core_dbQuote($ciniki, $args['limit']) . " ";
