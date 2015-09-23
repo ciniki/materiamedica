@@ -112,6 +112,7 @@ function ciniki_materiamedica_plantImageAdd(&$ciniki) {
 	// Check if this image should be the primary
 	//
 	if( isset($args['primary_image']) && $args['primary_image'] == 'yes' ) {
+		ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectUpdate');
 		$rc = ciniki_core_objectUpdate($ciniki, $args['business_id'], 'ciniki.materiamedica.plant', $item['plant_id'], array('image_id'=>$image['image_id']), 0x04);
 		if( $rc['stat'] != 'ok' ) {
 			return $rc;
