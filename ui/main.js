@@ -175,7 +175,7 @@ function ciniki_materiamedica_main() {
 		this.plant.data = null;
 		this.plant.plant_id = 0;
 		this.plant.sections = {
-			'_image':{'label':'Image', 'aside':'yes', 'fields':{
+			'_image':{'label':'Image', 'aside':'yes', 'type':'imageform', 'fields':{
 				'image_id':{'label':'', 'type':'image_id', 'hidelabel':'yes', 'history':'no'},
 			}},
 			'info':{'label':'Details', 'aside':'yes', 'list':{
@@ -321,7 +321,7 @@ function ciniki_materiamedica_main() {
 		this.edit.plant_id = 0;
 		this.edit.data = null;
 		this.edit.sections = {
-//			'_image':{'label':'Image', 'aside':'yes', 'fields':{
+//			'_image':{'label':'Image', 'aside':'yes', 'type':'imageform', 'fields':{
 //				'image_id':{'label':'', 'type':'image_id', 'controls':'all', 'hidelabel':'yes', 'history':'no'},
 //			}},
 //			'_image_caption':{'label':'', 'aside':'yes', 'fields':{

@@ -39,7 +39,7 @@ function ciniki_materiamedica_plantimages() {
 		this.edit.data = {};
 		this.edit.plant_id = 0;
 		this.edit.sections = {
-			'_image':{'label':'Photo', 'aside':'yes', 'fields':{
+			'_image':{'label':'Photo', 'aside':'yes', 'type':'imageform', 'fields':{
 				'image_id':{'label':'', 'type':'image_id', 'size':'large', 'hidelabel':'yes', 'controls':'all', 'history':'no'},
 			}},
 			'info':{'label':'Information', 'type':'simpleform', 'fields':{
