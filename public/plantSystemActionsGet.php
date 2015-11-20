@@ -23,6 +23,7 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
         'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
         'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plant'), 
         'system_num'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'System'), 
+        'notes'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Notes'), 
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
@@ -69,6 +70,22 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
         }
         if( isset($rc['types']['20']) ) {
             $system['secondary_actions'] = $rc['types']['20']['actions'];
+        }
+
+        //
+        // Get any notes
+        //
+        if( isset($args['notes']) && $args['notes'] == 'yes' ) {
+            ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'notesLoad');
+            $rc = ciniki_materiamedica_notesLoad($ciniki, $args['business_id'], array('key'=>'ciniki.materiamedica.plant-' . $args['plant_id'] . '-system-' . $args['system_num']));
+			if( $rc['stat'] != 'ok' ) {	
+				return $rc;
+			}
+            if( isset($rc['notes']) ) {
+                $system['notes'] = $rc['notes'];
+            } else {
+                $system['notes'] = array();
+            }
         }
 	}
 

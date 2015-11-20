@@ -514,10 +514,17 @@ function ciniki_materiamedica_main() {
             '_secondary_actions':{'label':'Secondary Actions', 'fields':{
                 'secondary_actions':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new secondary action:'},
             }},
+            'notes':{'label':'Notes', 'visible':function() {
+                return (M.ciniki_materiamedica_main.system.system_num==0?'no':'yes');
+                },'type':'simplegrid', 'num_cols':1,
+                'addTxt':'Add Note',
+                'addFn':'M.ciniki_materiamedica_main.noteEdit(\'M.ciniki_materiamedica_main.system.refreshNotes()\',\'ciniki.materiamedica.plant-\'+M.ciniki_materiamedica_main.system.plant_id+\'-system-\'+M.ciniki_materiamedica_main.system.system_num,0);',
+            },
 			'_buttons':{'label':'', 'buttons':{
 				'save':{'label':'Save', 'fn':'M.ciniki_materiamedica_main.systemSave();'},
             }},
         };
+        this.system.sectionData = function(s) { return this.data[s]; }
 		this.system.fieldValue = function(s, i, d) { 
 			return this.data[i]; 
 		}
@@ -525,64 +532,27 @@ function ciniki_materiamedica_main() {
 			return {'method':'ciniki.materiamedica.plantSystemHistory', 'args':{'business_id':M.curBusinessID, 
 				'system_num':this.system_num, 'field':i}};
 		}
+		this.system.cellValue = function(s, i, j, d) {
+            return d.content;
+		};
+		this.system.rowFn = function(s, i, d) {
+            return 'M.ciniki_materiamedica_main.noteEdit(\'M.ciniki_materiamedica_main.system.refreshNotes();\',\'' + d.note_key + '\',\'' + d.id + '\');';
+		};
+        this.system.refreshNotes = function() {
+            M.api.getJSONCb('ciniki.materiamedica.plantSystemActionsGet', {'business_id':M.curBusinessID, 
+                'plant_id':this.plant_id, 'system_num':this.system_num, 'notes':'yes'}, function(rsp) {
+                    if( rsp.stat != 'ok' ) {
+                        M.api.err(rsp);
+                        return false;
+                    }
+                    var p = M.ciniki_materiamedica_main.system;
+                    p.data.notes = rsp.system.notes;
+                    p.refreshSection('notes');
+                    p.show();
+            });
+        };
 		this.system.addButton('save', 'Save', 'M.ciniki_materiamedica_main.systemSave();');
 		this.system.addClose('Cancel');
-
-		//
-		// The panel to display the action form
-		//
-		this.action = new M.panel('Plant Action',
-			'ciniki_materiamedica_main', 'action',
-			'mc', 'medium', 'sectioned', 'ciniki.materiamedica.main.action');
-		this.action.action_id = 0;
-		this.action.plant_id = 0;
-		this.action.data = null;
-		this.action.sections = {
-			'info':{'label':'Details', 'aside':'yes', 'type':'simpleform', 'fields':{
-				'system':{'label':'System', 'type':'text', 'livesearch':'yes', 'livesearchempty':'yes'},
-				'action':{'label':'Action', 'type':'text', 'livesearch':'yes', 'livesearchempty':'yes'},
-			}},
-			'_notes':{'label':'Notes', 'aside':'yes', 'type':'simpleform', 'fields':{
-				'notes':{'label':'', 'type':'textarea', 'size':'large', 'hidelabel':'yes'},
-			}},
-			'_buttons':{'label':'', 'buttons':{
-				'save':{'label':'Save', 'fn':'M.ciniki_materiamedica_main.actionSave();'},
-				'delete':{'label':'Delete', 'fn':'M.ciniki_materiamedica_main.actionDelete();'},
-			}},
-		};
-		this.action.fieldValue = function(s, i, d) { 
-			return this.data[i]; 
-		}
-		this.action.sectionData = function(s) {
-			return this.data[s];
-		};
-		this.action.liveSearchCb = function(s, i, value) {
-			if( i == 'system' || i == 'action' ) {
-				var rsp = M.api.getJSONBgCb('ciniki.materiamedica.plantActionSearchField', {'business_id':M.curBusinessID, 'field':i, 'start_needle':value, 'limit':15},
-					function(rsp) {
-						M.ciniki_materiamedica_main.action.liveSearchShow(s, i, M.gE(M.ciniki_materiamedica_main.action.panelUID + '_' + i), rsp.results);
-					});
-			}
-		};
-		this.action.liveSearchResultValue = function(s, f, i, j, d) {
-			if( (f == 'system' || f == 'action' ) && d.result != null ) { return d.result.name; }
-			return '';
-		};
-		this.action.liveSearchResultRowFn = function(s, f, i, j, d) { 
-			if( (f == 'system' || f == 'action' ) && d.result != null ) {
-				return 'M.ciniki_materiamedica_main.action.updateField(\'' + s + '\',\'' + f + '\',\'' + escape(d.result.name) + '\');';
-			}
-		};
-		this.action.updateField = function(s, fid, result) {
-			M.gE(this.panelUID + '_' + fid).value = unescape(result);
-			this.removeLiveSearch(s, fid);
-		};
-		this.action.fieldHistoryArgs = function(s, i) {
-			return {'method':'ciniki.materiamedica.plantActionHistory', 'args':{'business_id':M.curBusinessID, 
-				'action_id':this.action_id, 'field':i}};
-		}
-		this.action.addButton('save', 'Save', 'M.ciniki_materiamedica_main.actionSave();');
-		this.action.addClose('Cancel');
 	}
 
 	this.start = function(cb, appPrefix, aG) {
@@ -789,32 +759,33 @@ function ciniki_materiamedica_main() {
     this.systemEdit = function(cb, pid, snum) {
         if( pid != null ) { this.system.plant_id = pid; }
         if( snum != null ) { this.system.system_num = snum; }
-        M.api.getJSONCb('ciniki.materiamedica.plantSystemActionsGet', {'business_id':M.curBusinessID, 'plant_id':this.system.plant_id, 'system_num':this.system.system_num}, function(rsp) {
-            if( rsp.stat != 'ok' ) {
-                M.api.err(rsp);
-                return false;
-            }
-            var p = M.ciniki_materiamedica_main.system;
-            p.data = rsp.system;
-            p.sections._primary_actions.fields.primary_actions.tags = rsp.actions.slice(0);
-            p.sections._secondary_actions.fields.secondary_actions.tags = rsp.actions.slice(0);
-            var options = [];
-            for(var i in M.ciniki_materiamedica_main.systems) {
-                if( M.ciniki_materiamedica_main.plant.data.systems == null || M.ciniki_materiamedica_main.plant.data.systems[i] == null ) {
-                    options[i] = M.ciniki_materiamedica_main.systems[i].name;
+        M.api.getJSONCb('ciniki.materiamedica.plantSystemActionsGet', {'business_id':M.curBusinessID, 
+            'plant_id':this.system.plant_id, 'system_num':this.system.system_num, 'notes':'yes'}, function(rsp) {
+                if( rsp.stat != 'ok' ) {
+                    M.api.err(rsp);
+                    return false;
                 }
-            }
-            if( options.length > 0 && p.system_num == 0 ) {
-                p.sections._system.active = 'yes';
-                p.sections._system.fields.system_num.active = 'yes';
-                p.sections._system.fields.system_num.options = options;
-            } else {
-                p.sections._system.active = 'no';
-                p.sections._system.fields.system_num.active = 'no';
-            }
-            p.refresh();
-            p.show(cb);
-        });
+                var p = M.ciniki_materiamedica_main.system;
+                p.data = rsp.system;
+                p.sections._primary_actions.fields.primary_actions.tags = rsp.actions.slice(0);
+                p.sections._secondary_actions.fields.secondary_actions.tags = rsp.actions.slice(0);
+                var options = [];
+                for(var i in M.ciniki_materiamedica_main.systems) {
+                    if( M.ciniki_materiamedica_main.plant.data.systems == null || M.ciniki_materiamedica_main.plant.data.systems[i] == null ) {
+                        options[i] = M.ciniki_materiamedica_main.systems[i].name;
+                    }
+                }
+                if( options.length > 0 && p.system_num == 0 ) {
+                    p.sections._system.active = 'yes';
+                    p.sections._system.fields.system_num.active = 'yes';
+                    p.sections._system.fields.system_num.options = options;
+                } else {
+                    p.sections._system.active = 'no';
+                    p.sections._system.fields.system_num.active = 'no';
+                }
+                p.refresh();
+                p.show(cb);
+            });
     };
 
     this.systemSave = function(cb) {
@@ -848,83 +819,4 @@ function ciniki_materiamedica_main() {
     this.noteEdit = function(cb, nkey, nid) {
         M.startApp('ciniki.materiamedica.notes',null,cb,'mc',{'note_key':nkey, 'note_id':nid});
     };
-
-/*
-	//
-	// Manage the actions for a plant
-	//
-	this.actionEdit = function(cb, aid, pid) {
-		if( aid != null ) { this.action.action_id = aid; }
-		if( pid != null ) { this.action.plant_id = pid; }
-		if( this.action.action_id == 0 ) {
-			this.action.reset();
-			this.action.sections._buttons.buttons.delete.visible = 'no';
-		} else {
-			this.action.sections._buttons.buttons.delete.visible = 'yes';
-		}
-		M.api.getJSONCb('ciniki.materiamedica.plantActionGet', {'business_id':M.curBusinessID, 'action_id':this.action.action_id}, function(rsp) {
-			if( rsp.stat != 'ok' ) {
-				M.api.err(rsp);
-				return false;
-			}
-			var p = M.ciniki_materiamedica_main.action;
-			p.data = rsp.action;
-			p.refresh();
-			p.show(cb);
-		});
-	};
-
-	this.actionSave = function() {
-		// Check form values
-		var nv = this.action.formFieldValue(this.action.sections.info.fields.system, 'system');
-		if( nv != this.action.fieldValue('info', 'system') && nv == '' ) {
-			alert('You must specifiy a system');
-			return false;
-		}
-		var nv = this.action.formFieldValue(this.action.sections.info.fields.action, 'action');
-		if( nv != this.action.fieldValue('info', 'action') && nv == '' ) {
-			alert('You must specifiy a action');
-			return false;
-		}
-		if( this.action.action_id > 0 ) {
-			var c = this.action.serializeForm('no');
-			if( c != '' ) {
-				var rsp = M.api.postJSONFormData('ciniki.materiamedica.plantActionUpdate', 
-					{'business_id':M.curBusinessID, 'action_id':this.action.action_id}, c,
-						function(rsp) {
-							if( rsp.stat != 'ok' ) {
-								M.api.err(rsp);
-								return false;
-							} else {
-								M.ciniki_materiamedica_main.action.close();
-							}
-						});
-			} else {
-				M.ciniki_materiamedica_main.action.close();
-			}
-		} else {
-			var c = this.action.serializeForm('yes');
-			var rsp = M.api.postJSONFormData('ciniki.materiamedica.plantActionAdd', {'business_id':M.curBusinessID, 'plant_id':this.action.plant_id}, c, function(rsp) {
-				if( rsp.stat != 'ok' ) {
-					M.api.err(rsp);
-					return false;
-				} else {
-					M.ciniki_materiamedica_main.action.close();
-				}
-			});
-		}
-	};
-
-	this.actionDelete = function() {
-		if( confirm('Are you sure you want to delete this action?') ) {
-			var rsp = M.api.getJSONCb('ciniki.materiamedica.plantActionDelete', 
-				{'business_id':M.curBusinessID, 'action_id':this.action.action_id}, function(rsp) {
-					if( rsp.stat != 'ok' ) {
-						M.api.err(rsp);
-						return false;
-					}
-					M.ciniki_materiamedica_main.action.close();
-				});
-		}
-	};*/
 }

@@ -11,7 +11,7 @@ function ciniki_materiamedica_notes() {
 		//
 		this.edit = new M.panel('Note',
 			'ciniki_materiamedica_notes', 'edit',
-			'mc', 'medium mediumaside', 'sectioned', 'ciniki.materiamedica.notes.edit');
+			'mc', 'medium', 'sectioned', 'ciniki.materiamedica.notes.edit');
 		this.edit.default_data = {};
 		this.edit.data = {};
 		this.edit.note_id = 0;
