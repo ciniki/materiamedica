@@ -2,31 +2,30 @@
 //
 // Description
 // ===========
-// This method will add a new plant to the database.
+// This method updates one or more elements of an existing note.
 //
 // Arguments
 // ---------
 // api_key:
 // auth_token:
-// business_id:		The ID of the business to add the plant to.  The user must
-//					an owner of the business.
+// business_id:		The ID of the business to the note is a part of.
+// note_id:		    The ID of the note to update.
 //
-// 
 // Returns
 // -------
-// <rsp stat='ok' id='34' />
+// <rsp stat='ok' />
 //
-function ciniki_materiamedica_plantActionAdd(&$ciniki) {
+function ciniki_materiamedica_noteUpdate(&$ciniki) {
     //  
     // Find all the required and optional arguments
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
         'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
-        'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plant'), 
-        'system'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'System'), 
-        'action'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Action'), 
-        'notes'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Notes'), 
+        'note_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Note'), 
+        'flags'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Options'), 
+        'note_date'=>array('required'=>'no', 'blank'=>'no', 'type'=>'date', 'name'=>'Date'), 
+        'content'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Content'), 
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
@@ -38,10 +37,10 @@ function ciniki_materiamedica_plantActionAdd(&$ciniki) {
     // check permission to run this function for this business
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantActionAdd'); 
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.noteUpdate'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
-    }   
+    }
 
 	//  
 	// Turn off autocommit
@@ -56,14 +55,14 @@ function ciniki_materiamedica_plantActionAdd(&$ciniki) {
 	}   
 
 	//
-	// Add the plant
+	// Update the note
 	//
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectAdd');
-	$rc = ciniki_core_objectAdd($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_action', $args);
-	if( $rc['stat'] != 'ok' ) {	
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectUpdate');
+	$rc = ciniki_core_objectUpdate($ciniki, $args['business_id'], 'ciniki.materiamedica.note', 
+		$args['note_id'], $args);
+	if( $rc['stat'] != 'ok' ) {
 		return $rc;
 	}
-	$action_id = $rc['id'];
 
 	//
 	// Commit the database changes
@@ -80,6 +79,6 @@ function ciniki_materiamedica_plantActionAdd(&$ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
 	ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'materiamedica');
 
-	return array('stat'=>'ok', 'id'=>$action_id);
+	return array('stat'=>'ok');
 }
 ?>

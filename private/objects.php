@@ -16,6 +16,7 @@ function ciniki_materiamedica_objects($ciniki) {
 		'sync'=>'yes',
 		'table'=>'ciniki_materiamedica_plants',
 		'fields'=>array(
+			'plant_number'=>array('default'=>'1'),
 			'family'=>array(),
 			'genus'=>array(),
 			'species'=>array(),
@@ -23,7 +24,7 @@ function ciniki_materiamedica_objects($ciniki) {
 			'permalink'=>array(),
 			'plant_type'=>array(),
 			'growth_pattern'=>array(),
-			'parts_used'=>array(),
+			'parts_used'=>array('default'=>'0'),
 			'image_id'=>array('ref'=>'ciniki.images.image'),
 			'image_caption'=>array('default'=>''),
 			'habitat'=>array(),
@@ -44,8 +45,8 @@ function ciniki_materiamedica_objects($ciniki) {
 		'fields'=>array(
 			'plant_id'=>array('ref'=>'ciniki.materiamedica.plant'),
 			'system'=>array(),
+			'action_type'=>array(),
 			'action'=>array(),
-			'notes'=>array('default'=>''),
 			),
 		'history_table'=>'ciniki_materiamedica_history',
 		);
@@ -76,6 +77,18 @@ function ciniki_materiamedica_objects($ciniki) {
 			'webflags'=>array('default'=>'0'),
 			'image_id'=>array('ref'=>'ciniki.images.image'),
 			'description'=>array(),
+			),
+		'history_table'=>'ciniki_materiamedica_history',
+		);
+	$objects['note'] = array(
+		'name'=>'Note',
+		'sync'=>'yes',
+		'table'=>'ciniki_materiamedica_notes',
+		'fields'=>array(
+			'note_key'=>array(),
+			'flags'=>array('default'=>'0'),
+			'note_date'=>array(),
+			'content'=>array(),
 			),
 		'history_table'=>'ciniki_materiamedica_history',
 		);

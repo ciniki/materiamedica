@@ -24,7 +24,8 @@ function ciniki_materiamedica_plantGet($ciniki) {
         'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Item'), 
 		'images'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Images'),
 		'tags'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Tags'),
-		'actions'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Actions'),
+		'systems'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Systems'),
+		'notes'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Notes'),
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
@@ -47,6 +48,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryIDTree');
+	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryArrayTree');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'datetimeFormat');
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'dateFormat');
 
@@ -64,8 +66,25 @@ function ciniki_materiamedica_plantGet($ciniki) {
 	$maps = $rc['maps'];
 
 	if( $args['plant_id'] == 0 ) {
+        //
+        // Get the next plant number available
+        //
+        $strsql = "SELECT MAX(plant_number) AS plant_number "
+            . "FROM ciniki_materiamedica_plants "
+            . "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+            . "";
+        $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.materiamedica', 'max');
+        if( $rc['stat'] != 'ok' ) {
+            return $rc;
+        }
+        if( isset($rc['max']['plant_number']) ) {
+            $plant_number = $rc['max']['plant_number'] + 1;
+        } else {
+            $plant_number = 1;
+        }
 		$plant = array(
 			'id'=>'0',
+            'plant_number'=>sprintf('%03d', $plant_number),
 			'family'=>'',
 			'genus'=>'',
 			'species'=>'',
@@ -87,6 +106,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
 			);
 	} else {
 		$strsql = "SELECT ciniki_materiamedica_plants.id, "
+			. "LPAD(ciniki_materiamedica_plants.plant_number, 3, '0') AS plant_number, "
 			. "ciniki_materiamedica_plants.family, "
 			. "ciniki_materiamedica_plants.genus, "
 			. "ciniki_materiamedica_plants.species, "
@@ -115,14 +135,14 @@ function ciniki_materiamedica_plantGet($ciniki) {
 
 		$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.materiamedica', array(
 			array('container'=>'plants', 'fname'=>'id', 'name'=>'plant',
-				'fields'=>array('id', 'family', 'genus', 'species', 'common_name', 'permalink', 
-					'plant_type', 'plant_type_text', 'growth_pattern', 'growth_pattern_text', 
+				'fields'=>array('id', 'plant_number', 'family', 'genus', 'species', 'common_name', 'permalink', 
+					'plant_type', 'plant_type_text', 'growth_pattern', 'growth_pattern_text', 'parts_used', 'parts_used_text', 
 					'image_id', 'image_caption', 'habitat', 'cultivation', 
 					'history', 'warnings', 'contraindications', 'quick_id', 'notes', 'reference_notes'),
 				'maps'=>array('plant_type_text'=>$maps['plant']['plant_type'],
 					'growth_pattern_text'=>$maps['plant']['growth_pattern'],
-//					'parts_used_text'=>$maps['plant']['parts_used'],
 					),
+                'flags'=>array('parts_used_text'=>$maps['plant']['parts_used']),
 				),
 			));
 		if( $rc['stat'] != 'ok' ) {
@@ -143,7 +163,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
 			. "ORDER BY tag_type, tag_name "
 			. "";
 		$rc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.materiamedica', array(
-			array('container'=>'tags', 'fname'=>'tagtype', 'name'=>'tags',
+			array('container'=>'tags', 'fname'=>'tagtype',
 				'fields'=>array('tag_type', 'lists'), 'dlists'=>array('lists'=>'::')),
 			));
 		if( $rc['stat'] != 'ok' ) {
@@ -156,25 +176,28 @@ function ciniki_materiamedica_plantGet($ciniki) {
 		}
 
 		//
-		// Get the actions if requested
+		// Get the systems if requested
 		//
-		if( isset($args['actions']) && $args['actions'] == 'yes' ) {
+		if( isset($args['systems']) && $args['systems'] == 'yes' ) {
 			$plant['actions'] = array();
-			$strsql = "SELECT id, system, action "
+			$strsql = "SELECT id, system, action_type, action AS actions "
 				. "FROM ciniki_materiamedica_plant_actions "
 				. "WHERE plant_id = '" . ciniki_core_dbQuote($ciniki, $args['plant_id']) . "' "
 				. "AND business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
-				. "ORDER BY system, action "
+				. "ORDER BY system, action_type, action "
 				. "";
-			$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.materiamedica', array(
-				array('container'=>'actions', 'fname'=>'id', 'name'=>'action',
-					'fields'=>array('id', 'system', 'action')),
+			$rc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.materiamedica', array(
+				array('container'=>'systems', 'fname'=>'system',
+					'fields'=>array('system')),
+				array('container'=>'actions', 'fname'=>'action_type',
+					'fields'=>array('actions'), 'dlists'=>array('actions'=>'::')),
 				));
 			if( $rc['stat'] != 'ok' ) {	
 				return $rc;
 			}
-			if( isset($rc['actions']) ) {
-				$plant['actions'] = $rc['actions'];
+            $plant['systems'] = array();
+			if( isset($rc['systems']) ) {
+                $plant['systems'] = $rc['systems'];
 			}
 		}
 
@@ -189,7 +212,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
 				. "AND business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
 				. "ORDER BY date_added, name "
 				. "";
-			$rc = ciniki_core_dbHashQueryTree($ciniki, $strsql, 'ciniki.materiamedica', array(
+			$rc = ciniki_core_dbHashQueryArrayTree($ciniki, $strsql, 'ciniki.materiamedica', array(
 				array('container'=>'images', 'fname'=>'id', 'name'=>'image',
 					'fields'=>array('id', 'image_id', 'name', 'flags', 'parts', 'webflags', 'description')),
 				));
@@ -199,16 +222,32 @@ function ciniki_materiamedica_plantGet($ciniki) {
 			if( isset($rc['images']) ) {
 				$plant['images'] = $rc['images'];
 				foreach($plant['images'] as $inum => $img) {
-					if( isset($img['image']['image_id']) && $img['image']['image_id'] > 0 ) {
-						$rc = ciniki_images_loadCacheThumbnail($ciniki, $args['business_id'], $img['image']['image_id'], 75);
+					if( isset($img['image_id']) && $img['image_id'] > 0 ) {
+						$rc = ciniki_images_loadCacheThumbnail($ciniki, $args['business_id'], $img['image_id'], 75);
 						if( $rc['stat'] != 'ok' ) {
 							return $rc;
 						}
-						$plant['images'][$inum]['image']['image_data'] = 'data:image/jpg;base64,' . base64_encode($rc['image']);
+						$plant['images'][$inum]['image_data'] = 'data:image/jpg;base64,' . base64_encode($rc['image']);
 					}
 				}
 			}
 		}
+
+        //
+        // Get any notes
+        //
+        if( isset($args['notes']) && $args['notes'] == 'yes' ) {
+            ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'notesLoad');
+            $rc = ciniki_materiamedica_notesLoad($ciniki, $args['business_id'], array('like_key'=>'ciniki.materiamedica.plant-' . $args['plant_id']));
+			if( $rc['stat'] != 'ok' ) {	
+				return $rc;
+			}
+            if( isset($rc['note_keys']) ) {
+                $plant['_notes'] = $rc['note_keys'];
+            } else {
+                $plant['_notes'] = array();
+            }
+        }
 	}
 
 	//
@@ -225,7 +264,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
 			. "ORDER BY tag_type, tag_name "
 			. "";
 		$rc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.materiamedica', array(
-			array('container'=>'tags', 'fname'=>'tagtype', 'name'=>'tag',
+			array('container'=>'tags', 'fname'=>'tagtype', 
 				'fields'=>array('tag_type', 'tag_names'), 'dlists'=>array('tag_names'=>'::')),
 			));
 		if( $rc['stat'] != 'ok' ) {

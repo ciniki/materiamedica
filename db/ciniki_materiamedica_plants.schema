@@ -6,84 +6,87 @@
 #
 # Fields
 # ------
-# id:				The ID assigned to the event.
-# uuid:				The Universal Unique ID.
-# business_id:		The business the event is attached to.
+# id:               The ID assigned to the event.
+# uuid:             The Universal Unique ID.
+# business_id:      The business the event is attached to.
 #
-# family:			
+# plant_number:     The number assigned to each plant.
+#
+# family:           
 # genus:
 # species:
 #
-# common_name:		The common name(s) for the plant.
+# common_name:      The common name(s) for the plant.
 # 
-# permalink:		The permalink for the plant.
+# permalink:        The permalink for the plant.
 #
-# plant_type:		The type of plant.
+# plant_type:       The type of plant.
 #
-#					10 - Tree
-#					20 - Plant
-#					30 - Shrub
-#					40 - Vine
+#                   10 - Tree
+#                   20 - Plant
+#                   30 - Shrub
+#                   40 - Vine
 #
-# growth_pattern:	The growth of the plant.
+# growth_pattern:   The growth of the plant.
 #
-#					10 - Deciduous
-#					20 - Evergreen
-#					30 - Annual
-#					40 - Biennial
-#					50 - Perennial
+#                   10 - Deciduous
+#                   20 - Evergreen
+#                   30 - Annual
+#                   40 - Biennial
+#                   50 - Perennial
 #
 #
-# parts_used:		The parts of the plant that are used. This should match with bit field in plant_images.
+# parts_used:       The parts of the plant that are used. This should match with bit field in plant_images.
 #
-#					0x01 - Bark
-#					0x02 - Flowers
-#					0x04 - Fruits
-#					0x08 - Roots
-#					0x10 - Seeds
-#					0x20 - Stems
-#					0x40 - Leaves
-#					0x80 - 
-#					
-# image_id:			The ID of the image to use as the primary image for the plant.
+#                   0x01 - Bark
+#                   0x02 - Flowers
+#                   0x04 - Fruits
+#                   0x08 - Roots
+#                   0x10 - Seeds
+#                   0x20 - Stems
+#                   0x40 - Leaves
+#                   0x80 - Wood
+#                   
+# image_id:         The ID of the image to use as the primary image for the plant.
 #
-# habitat:			The habitat information.
-# cultivation:		The cultivation information.
-# history:			The history and folklore of the plant.
-# contraindication:	Any allergies or information for reactions.
+# habitat:          The habitat information.
+# cultivation:      The cultivation information.
+# history:          The history and folklore of the plant.
+# contraindication: Any allergies or information for reactions.
 #
-# notes:			The notes for the plant.
-# reference_notes:	The references for the plant.
+# notes:            The notes for the plant.
+# reference_notes:  The references for the plant.
 #
-# date_added:		The UTC date and time the record was added.
-# last_updated:		The UTC date and time the record was last updated.
+# date_added:       The UTC date and time the record was added.
+# last_updated:     The UTC date and time the record was last updated.
 #
 create table ciniki_materiamedica_plants (
-	id int not null auto_increment,
-	uuid char(36) not null,
-	business_id int not null,
-	family varchar(200) not null,
-	genus varchar(200) not null,
-	species varchar(200) not null,
-	common_name varchar(250) not null,
-	permalink varchar(500) not null,
-	plant_type tinyint unsigned not null,
-	growth_pattern tinyint unsigned not null,
-	parts_used tinyint unsigned not null,
-	image_id int not null,
-	image_caption varchar(250) not null,
-	habitat text not null,
-	cultivation text not null,
-	history text not null,
-	contraindications text not null,
-	warnings varchar(2000) not null,
-	quick_id varchar(1000) not null,
-	notes text not null,
-	reference_notes text not null,
-	date_added datetime not null,
-	last_updated datetime not null,
-	primary key (id),
-	unique index (uuid),
-	unique index (family, genus, species),
-	index sync (business_id, uuid, last_updated)
-) ENGINE='InnoDB', COMMENT='v1.02';
+    id int not null auto_increment,
+    uuid char(36) not null,
+    business_id int not null,
+    plant_number int not null,
+    family varchar(200) not null,
+    genus varchar(200) not null,
+    species varchar(200) not null,
+    common_name varchar(250) not null,
+    permalink varchar(500) not null,
+    plant_type tinyint unsigned not null,
+    growth_pattern tinyint unsigned not null,
+    parts_used tinyint unsigned not null,
+    image_id int not null,
+    image_caption varchar(250) not null,
+    habitat text not null,
+    cultivation text not null,
+    history text not null,
+    contraindications text not null,
+    warnings varchar(2000) not null,
+    quick_id varchar(1000) not null,
+    notes text not null,
+    reference_notes text not null,
+    date_added datetime not null,
+    last_updated datetime not null,
+    primary key (id),
+    unique index (uuid),
+    unique index (family, genus, species),
+    index sync (business_id, uuid, last_updated)
+) ENGINE='InnoDB', COMMENT='v1.01';

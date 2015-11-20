@@ -23,6 +23,7 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
         'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
         'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plant'), 
+        'plant_number'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Number'), 
         'family'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Family'), 
         'genus'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Genus'), 
         'species'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Species'), 

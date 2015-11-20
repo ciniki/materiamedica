@@ -5,72 +5,73 @@
 #
 # Fields
 # ------
-# id:				The ID of the plant image.
-# uuid:				The Universal Unique ID.
-# business_id:		The ID of the business the plant is attached to.
+# id:               The ID of the plant image.
+# uuid:             The Universal Unique ID.
+# business_id:      The ID of the business the plant is attached to.
 #
-# plant_id:			The ID of the plant from the ciniki_materiamedica_plants table.
+# plant_id:         The ID of the plant from the ciniki_materiamedica_plants table.
 # 
-# name:				The name for the image.
-# permalink:		The permalink for the image, to be used in the url.
+# name:             The name for the image.
+# permalink:        The permalink for the image, to be used in the url.
 #
-# flags:			The flags for the image
+# flags:            The flags for the image
 #
-#					0x01 - Photo
-#					0x02 - Illustration
-#					0x04 - Mature
-#					0x08 - Immature
-#					0x10 - Spring
-#					0x20 - Summer
-#					0x40 - Fall
-#					0x80 - Winter
+#                   0x01 - Photo
+#                   0x02 - Illustration
+#                   0x04 - Mature
+#                   0x08 - Immature
+#                   0x10 - Spring
+#                   0x20 - Summer
+#                   0x40 - Fall
+#                   0x80 - Winter
 #
-# parts:			The parts of the plant the photo pertains to:
+# parts:            The parts of the plant the photo pertains to:
 #
-#					0x01 - Bark
-#					0x02 - Flowers
-#					0x04 - Fruits
-#					0x08 - Roots
-#					0x10 - Seeds
-#					0x20 - Stems
-#					0x40 - Leaves
-#					0x80 - 
+#                   0x01 - Bark
+#                   0x02 - Flowers
+#                   0x04 - Fruits
+#                   0x08 - Roots
+#                   0x10 - Seeds
+#                   0x20 - Stems
+#                   0x40 - Leaves
+#                   0x80 - Wood
 #
-# location:			The location where the photo was taken
-# date_taken:		The date the photo was taken
-#					
 #
-# webflags:			The flags for displaying on the website.  This allows
-#					for a participant to upload images without them being
-#					displayed on the website.  This could be used for 
-#					artists to submit porfolios and determine which ones show up.
+# location:         The location where the photo was taken
+# date_taken:       The date the photo was taken
+#                   
 #
-#					0x01 - Private (do not show on website, can be used to share marketing material with organizers)
+# webflags:         The flags for displaying on the website.  This allows
+#                   for a participant to upload images without them being
+#                   displayed on the website.  This could be used for 
+#                   artists to submit porfolios and determine which ones show up.
 #
-# image_id:			The ID of the image in the ciniki.images module.
+#                   0x01 - Private (do not show on website, can be used to share marketing material with organizers)
 #
-# description:		The description for the image.
+# image_id:         The ID of the image in the ciniki.images module.
 #
-# date_added:		The UTC date and time the image was added to the event.
-# last_updated:		The UTC date and time the image was last updated.
+# description:      The description for the image.
+#
+# date_added:       The UTC date and time the image was added to the event.
+# last_updated:     The UTC date and time the image was last updated.
 #
 create table ciniki_materiamedica_plant_images (
-	id int not null auto_increment,
-	uuid char(36) not null,
-	business_id int not null,
-	plant_id int not null,
-	name varchar(200) not null,
-	permalink varchar(200) not null,
-	flags tinyint not null,
-	parts tinyint not null,
-	location varchar(250) not null,
-	date_taken date not null,
-	webflags tinyint unsigned not null,
-	image_id int not null,
-	description varchar(6000) not null,
-	date_added datetime not null,
-	last_updated datetime not null,
-	primary key (id),
-	index (plant_id, name),
-	index sync (business_id, uuid, last_updated)
-) ENGINE='InnoDB', COMMENT='v1.02';
+    id int not null auto_increment,
+    uuid char(36) not null,
+    business_id int not null,
+    plant_id int not null,
+    name varchar(200) not null,
+    permalink varchar(200) not null,
+    flags tinyint not null,
+    parts tinyint not null,
+    location varchar(250) not null,
+    date_taken date not null,
+    webflags tinyint unsigned not null,
+    image_id int not null,
+    description varchar(6000) not null,
+    date_added datetime not null,
+    last_updated datetime not null,
+    primary key (id),
+    index (plant_id, name),
+    index sync (business_id, uuid, last_updated)
+) ENGINE='InnoDB', COMMENT='v1.01';

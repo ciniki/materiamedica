@@ -1,0 +1,50 @@
+#
+# Description
+# -----------
+# This table stores notes for other elements in the materia medica module. Each item that has a note attached
+# is referenced by an note key which is made up of the hierachy of objects.
+#
+# Some examples:
+# Common Name Notes - (ciniki.materiamedica.plant-34-common_name)
+# System Notes for general system - (ciniki.materiamedica.plant-34-system-10)
+# Notes for harvesting - (ciniki.materiamedica.plant-34-cinki.materiamedica.plantharvesting-4)
+#
+# When showing notes, the module can query for object/object_id/note_key and get the list of notes back.
+#
+# References for notes are stored in the ciniki.citations module.
+#
+# Fields
+# ------
+# id:               The ID assigned to the event.
+# uuid:             The Universal Unique ID.
+# business_id:      The business the event is attached to.
+#
+# note_key:         The key for the note. Keys can be duplicated to allow for multiple notes
+#                   for the same object.
+#
+# flags:            The options for the note.
+#
+#                   0x01 - Primary
+#
+# note_date:        The date of the note as specified by the user.
+#
+# content:          The content of the note
+#
+# date_added:       The UTC date and time the record was added.
+# last_updated:     The UTC date and time the record was last updated.
+#
+create table ciniki_materiamedica_notes (
+    id int not null auto_increment,
+    uuid char(36) not null,
+    business_id int not null,
+    note_key varchar(500) not null,
+    flags tinyint unsigned not null,
+    note_date date not null,
+    content varchar(5000) not null,
+    date_added datetime not null,
+    last_updated datetime not null,
+    primary key (id),
+    unique index (uuid),
+    index (note_key),
+    index sync (business_id, uuid, last_updated)
+) ENGINE='InnoDB', COMMENT='v1.01';

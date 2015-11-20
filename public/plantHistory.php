@@ -29,7 +29,7 @@ function ciniki_materiamedica_plantHistory($ciniki) {
 	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
 	$rc = ciniki_core_prepareArgs($ciniki, 'no', array(
 		'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
-		'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Recipe'), 
+		'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plant'), 
 		'field'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'field'), 
 		));
 	if( $rc['stat'] != 'ok' ) {
