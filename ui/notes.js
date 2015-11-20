@@ -3,7 +3,7 @@
 //
 function ciniki_materiamedica_notes() {
 	this.flags = {
-		'1':{'name':'Primary'},
+		'1':{'name':'Favourite'},
 		};
 	this.init = function() {
 		//

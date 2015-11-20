@@ -182,7 +182,7 @@ function ciniki_materiamedica_main() {
 		//
 		this.plant = new M.panel('Plant',
 			'ciniki_materiamedica_main', 'plant',
-			'mc', 'medium mediumaside', 'sectioned', 'ciniki.materiamedica.main.plant');
+			'mc', 'large narrowaside', 'sectioned', 'ciniki.materiamedica.main.plant');
 		this.plant.next_plant_id = 0;
 		this.plant.prev_plant_id = 0;
 		this.plant.data = null;

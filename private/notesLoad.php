@@ -47,7 +47,7 @@ function ciniki_materiamedica_notesLoad(&$ciniki, $business_id, $args) {
     } else {
         return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2689', 'msg'=>'Unable to find notes'));
     }
-    $strsql .= "ORDER BY (flags&0x01) DESC, note_date, date_added "
+    $strsql .= "ORDER BY note_key, (flags&0x01) DESC, note_date, date_added "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryArrayTree');
     $rc = ciniki_core_dbHashQueryArrayTree($ciniki, $strsql, 'ciniki.materiamedica', array(
