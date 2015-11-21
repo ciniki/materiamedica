@@ -25,6 +25,7 @@ function ciniki_materiamedica_notes() {
 				'content':{'label':'', 'type':'textarea', 'size':'medium', 'hidelabel':'yes'},
 			}},
             'citations':{'label':'References', 'type':'simplegrid', 'num_cols':1,
+                'cellClasses':['multiline'],
                 'addTxt':'Add Reference',
                 'addFn':'M.ciniki_materiamedica_notes.citationEdit(0);',
                 },
@@ -41,7 +42,7 @@ function ciniki_materiamedica_notes() {
 			return ''; 
 		};
         this.edit.cellValue = function(s, i, j, d) {
-            return d.citation_text;
+            return '<span class="maintext">' + d.citation_text + '</span><span class="subtext">' + d.notes + '</span>';
         };
         this.edit.rowFn = function(s, i, d) {
             return 'M.ciniki_materiamedica_notes.citationEdit(' + d.id + ');';
