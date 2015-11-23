@@ -22,7 +22,7 @@ function ciniki_materiamedica_notes() {
 				'note_date':{'label':'Date', 'type':'date'},
 			}},
 			'_content':{'label':'', 'type':'simpleform', 'fields':{
-				'content':{'label':'', 'type':'textarea', 'size':'medium', 'hidelabel':'yes'},
+				'content':{'label':'', 'type':'textarea', 'size':'large', 'hidelabel':'yes'},
 			}},
             'citations':{'label':'References', 'type':'simplegrid', 'num_cols':1,
                 'cellClasses':['multiline'],

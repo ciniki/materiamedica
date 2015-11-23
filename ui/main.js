@@ -330,7 +330,7 @@ function ciniki_materiamedica_main() {
 		};
 		this.plant.cellValue = function(s, i, j, d) {
             if( s.match(/system/) ) {
-                return d.content;
+                return d.content.replace(/\n/g,'<br/>');
             }
 		};
 		this.plant.rowFn = function(s, i, d) {
