@@ -31,7 +31,7 @@ function ciniki_materiamedica_notes() {
                 },
 			'_save':{'label':'', 'buttons':{
 				'save':{'label':'Save', 'fn':'M.ciniki_materiamedica_notes.noteSave();'},
-				'delete':{'label':'Delete', 'visible':'no', 'fn':'M.ciniki_materiamedica_notes.noteDelete();'},
+				'delete':{'label':'Delete', 'visible':function() { return (M.ciniki_materiamedica_notes.edit.note_id>0?'yes':'no');}, 'fn':'M.ciniki_materiamedica_notes.noteDelete();'},
 			}},
 		};
         this.edit.sectionData = function(s) { return this.data[s]; }
@@ -109,8 +109,9 @@ function ciniki_materiamedica_notes() {
                         M.api.err(rsp);
                         return false;
                     } 
+                    M.ciniki_materiamedica_main.edit.note_id = rsp.id;
                     M.startApp('ciniki.citations.edit',null,'M.ciniki_materiamedica_notes.edit.refreshCitations();','mc',
-                        {'object':'ciniki.materiamedica.note','object_id':this.edit.note_id,'citation_id':cid});
+                        {'object':'ciniki.materiamedica.note','object_id':rsp.id,'citation_id':cid});
                 });
         } else {
             M.startApp('ciniki.citations.edit',null,'M.ciniki_materiamedica_notes.edit.refreshCitations();','mc',
