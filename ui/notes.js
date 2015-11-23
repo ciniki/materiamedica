@@ -109,7 +109,7 @@ function ciniki_materiamedica_notes() {
                         M.api.err(rsp);
                         return false;
                     } 
-                    M.ciniki_materiamedica_main.edit.note_id = rsp.id;
+                    M.ciniki_materiamedica_notes.edit.note_id = rsp.id;
                     M.startApp('ciniki.citations.edit',null,'M.ciniki_materiamedica_notes.edit.refreshCitations();','mc',
                         {'object':'ciniki.materiamedica.note','object_id':rsp.id,'citation_id':cid});
                 });
