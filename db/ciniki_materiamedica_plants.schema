@@ -78,6 +78,7 @@ create table ciniki_materiamedica_plants (
     habitat text not null,
     cultivation text not null,
     history text not null,
+    energetics text not null,
     contraindications text not null,
     warnings varchar(2000) not null,
     quick_id varchar(1000) not null,

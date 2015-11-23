@@ -36,6 +36,7 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
         'habitat'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Habitat'), 
         'cultivation'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Cultivation'), 
         'history'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'History'), 
+        'energetics'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'Energetics'), 
         'warnings'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Warnings'), 
         'contraindications'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Contraindications'), 
         'quick_id'=>array('required'=>'no', 'blank'=>'yes', 'default'=>'', 'name'=>'Quick ID'), 

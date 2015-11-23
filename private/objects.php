@@ -30,6 +30,7 @@ function ciniki_materiamedica_objects($ciniki) {
 			'habitat'=>array(),
 			'cultivation'=>array(),
 			'history'=>array(),
+			'energetics'=>array(),
 			'contraindications'=>array(),
 			'warnings'=>array(),
 			'quick_id'=>array(),

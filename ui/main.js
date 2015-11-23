@@ -74,7 +74,7 @@ function ciniki_materiamedica_main() {
 				'cellClasses':['multiline', ''],
 				'sortable':'yes', 'sortTypes':['text', 'text'],
 				'addTxt':'Add Plant',
-				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);',
+				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0, \'info\');',
 				},
 			};
 		this.menu.forms.system = {
@@ -87,7 +87,7 @@ function ciniki_materiamedica_main() {
 				'cellClasses':['multiline', ''],
 				'sortable':'yes', 'sortTypes':['text', 'text'],
 				'addTxt':'Add Plant',
-				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);',
+				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0, \'info\');',
 				},
 			};
 		this.menu.forms.action = {
@@ -100,7 +100,7 @@ function ciniki_materiamedica_main() {
 				'cellClasses':['multiline',''],
 				'sortable':'yes', 'sortTypes':['text', 'text'],
 				'addTxt':'Add Plant',
-				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);',
+				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0, \'info\');',
 				},
 			};
 		this.menu.forms['30'] = {
@@ -113,7 +113,7 @@ function ciniki_materiamedica_main() {
 				'cellClasses':['multiline', ''],
 				'sortable':'yes', 'sortTypes':['text', 'text'],
 				'addTxt':'Add Plant',
-				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);',
+				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0, \'info\');',
 				},
 			};
 		this.menu.forms['40'] = {
@@ -126,7 +126,7 @@ function ciniki_materiamedica_main() {
 				'cellClasses':['multiline', ''],
 				'sortable':'yes', 'sortTypes':['text', 'text'],
 				'addTxt':'Add Plant',
-				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);',
+				'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0, \'info\');',
 				},
 			};
 		this.menu.sections = this.menu.forms.all;	
@@ -174,7 +174,7 @@ function ciniki_materiamedica_main() {
 //		this.menu.liveSearchSubmitFn = function(s, search_str) {
 //			M.ciniki_materiamedica_main.searchArtCatalog('M.ciniki_materiamedica_main.showMenu();', search_str);
 //		};
-		this.menu.addButton('add', 'Add', 'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0);');
+		this.menu.addButton('add', 'Add', 'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.showMenu();\', 0, \'info\');');
 		this.menu.addClose('Back');
 
 		//
@@ -222,7 +222,7 @@ function ciniki_materiamedica_main() {
                 'images':{'label':'<span class="faicon">&#xf030;</span>', 'fn':'M.ciniki_materiamedica_main.plant.switchTab(\'images\');'},
                 'energetics':{'label':'<span class="faicon">&#xf0e7;</span>', 'fn':'M.ciniki_materiamedica_main.plant.switchTab(\'energetics\');'},
                 'preparations':{'label':'<span class="faicon">&#xf0f4;</span>', 'fn':'M.ciniki_materiamedica_main.plant.switchTab(\'preparations\');'},
-                'notes':{'label':'<span class="faicon">&#xf044;</span>', 'fn':'M.ciniki_materiamedica_main.plant.switchTab(\'notes\');'},
+                'personalexperience':{'label':'<span class="faicon">&#xf044;</span>', 'fn':'M.ciniki_materiamedica_main.plant.switchTab(\'personalexperience\');'},
                 }},
 //			'actions':{'label':'System Actions', 'type':'simplegrid', 'num_cols':2,
 //				'headerValues':['System', 'Action'],
@@ -235,14 +235,34 @@ function ciniki_materiamedica_main() {
 			'cultivation':{'label':'Cultivation', 'type':'htmlcontent', 'visible':function() {
                 return (M.ciniki_materiamedica_main.plant.sections._tabs.selected=='habitat'?'yes':'hidden'); 
                 }},
+			'_habitat':{'label':'', 'type':'simplegrid', 'num_cols':1, 'visible':function() {
+                return (M.ciniki_materiamedica_main.plant.sections._tabs.selected=='habitat'?'yes':'hidden'); 
+                },
+				'addTxt':'Edit',
+                'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.plantShow();\',M.ciniki_materiamedica_main.plant.plant_id,\'habitat\');',
+				},
 			'history':{'label':'History', 'type':'htmlcontent', 'visible':function() {
                 return (M.ciniki_materiamedica_main.plant.sections._tabs.selected=='energetics'?'yes':'hidden'); 
-//				return ((M.ciniki_materiamedica_main.plant.data.history!=null&&M.ciniki_materiamedica_main.plant.data.history!='')?'yes':'no');
 				}},
-			'notes':{'label':'Notes', 'type':'htmlcontent', 'visible':function() {
-                return (M.ciniki_materiamedica_main.plant.sections._tabs.selected=='notes'?'yes':'hidden'); 
+			'energetics':{'label':'Energetics', 'type':'htmlcontent', 'visible':function() {
+                return (M.ciniki_materiamedica_main.plant.sections._tabs.selected=='energetics'?'yes':'hidden'); 
+				}},
+			'_history':{'label':'', 'type':'simplegrid', 'num_cols':1, 'visible':function() {
+                return (M.ciniki_materiamedica_main.plant.sections._tabs.selected=='energetics'?'yes':'hidden'); 
+                },
+				'addTxt':'Edit',
+                'addFn':'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.plantShow();\',M.ciniki_materiamedica_main.plant.plant_id,\'history\');',
+				},
+            '_personalexperience':{'label':'Personal Experience', 'type':'simplegrid', 'num_cols':1,
+                'addTxt':'Add Note',
+                'addFn':'M.ciniki_materiamedica_main.noteEdit(\'M.ciniki_materiamedica_main.plantShow()\',\'ciniki.materiamedica.plant-\'+M.ciniki_materiamedica_main.plant.plant_id+\'-personalexperience\',0);', 
+                'visible':function() {
+                    return (M.ciniki_materiamedica_main.plant.sections._tabs.selected=='personalexperience'?'yes':'hidden');
+                }},
+//			'notes':{'label':'Notes', 'type':'htmlcontent', 'visible':function() {
+//                return (M.ciniki_materiamedica_main.plant.sections._tabs.selected=='notes'?'yes':'hidden'); 
 //                return ((M.ciniki_materiamedica_main.plant.data.notes!=null&&M.ciniki_materiamedica_main.plant.data.notes!='')?'yes':'no');
-				}},
+//				}},
 //			'reference_notes':{'label':'References', 'type':'htmlcontent', 'visible':function() {
 //                return 'no';
 //                return ((M.ciniki_materiamedica_main.plant.data.reference_notes!=null&&M.ciniki_materiamedica_main.plant.data.reference_notes!='')?'yes':'no');
@@ -281,6 +301,12 @@ function ciniki_materiamedica_main() {
             if( s.match(/-system-/) ) {
                 if( this.data._notes != null && this.data._notes['ciniki.materiamedica.plant-'+this.plant_id+s] != null ) {
                     return this.data._notes['ciniki.materiamedica.plant-'+this.plant_id+s];
+                }
+                return null;
+            }
+            if( s == '_personalexperience' ) {
+                if( this.data._notes != null && this.data._notes['ciniki.materiamedica.plant-'+this.plant_id+'-personalexperience'] != null ) {
+                    return this.data._notes['ciniki.materiamedica.plant-'+this.plant_id+'-personalexperience'];
                 }
                 return null;
             }
@@ -329,12 +355,12 @@ function ciniki_materiamedica_main() {
 			return '';
 		};
 		this.plant.cellValue = function(s, i, j, d) {
-            if( s.match(/system/) ) {
+            if( s.match(/system/) || s == '_personalexperience' ) {
                 return d.content.replace(/\n/g,'<br/>');
             }
 		};
 		this.plant.rowFn = function(s, i, d) {
-            if( s.match(/system/) ) {
+            if( s.match(/system/) || s == '_personalexperience' ) {
 				return 'M.ciniki_materiamedica_main.noteEdit(\'M.ciniki_materiamedica_main.plantShow();\',\'' + d.note_key + '\',\'' + d.id + '\');';
             }
 		};
@@ -386,7 +412,7 @@ function ciniki_materiamedica_main() {
             this.show();
         };
 
-		this.plant.addButton('edit', 'Edit', 'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.plantShow();\',M.ciniki_materiamedica_main.plant.plant_id);');
+		this.plant.addButton('edit', 'Edit', 'M.ciniki_materiamedica_main.plantEdit(\'M.ciniki_materiamedica_main.plantShow();\',M.ciniki_materiamedica_main.plant.plant_id, \'info\');');
 		this.plant.addButton('next', 'Next');
 		this.plant.addClose('Back');
 		this.plant.addLeftButton('prev', 'Prev');
@@ -396,9 +422,10 @@ function ciniki_materiamedica_main() {
 		//
 		this.edit = new M.panel('Plant',
 			'ciniki_materiamedica_main', 'edit',
-			'mc', 'medium mediumaside', 'sectioned', 'ciniki.materiamedica.main.edit');
+			'mc', 'medium', 'sectioned', 'ciniki.materiamedica.main.edit');
 		this.edit.plant_id = 0;
 		this.edit.data = null;
+        this.edit.edit_section = 'info';
 		this.edit.sections = {
 //			'_image':{'label':'Image', 'aside':'yes', 'type':'imageform', 'fields':{
 //				'image_id':{'label':'', 'type':'image_id', 'controls':'all', 'hidelabel':'yes', 'history':'no'},
@@ -406,7 +433,7 @@ function ciniki_materiamedica_main() {
 //			'_image_caption':{'label':'', 'aside':'yes', 'fields':{
 //				'image_caption':{'label':'Caption', 'type':'text'},
 //			}},
-			'info':{'label':'Details', 'aside':'yes', 'type':'simpleform', 'fields':{
+			'info':{'label':'Details', 'type':'simpleform', 'fields':{
 				'plant_number':{'label':'Number', 'type':'text', 'size':'small'},
 				'family':{'label':'Family', 'type':'text', 'livesearch':'yes'},
 				'genus':{'label':'Genus', 'type':'text', 'livesearch':'yes'},
@@ -415,34 +442,46 @@ function ciniki_materiamedica_main() {
 				'plant_type':{'label':'Type', 'type':'toggle', 'toggles':this.plantTypes},
 				'growth_pattern':{'label':'Growth', 'type':'toggle', 'toggles':this.growthPatterns},
 				'parts_used':{'label':'Parts Used', 'type':'flags', 'join':'yes', 'flags':this.partsUsed},
-			}},
-			'_warnings':{'label':'Warnings', 'aside':'yes', 'type':'simpleform', 'fields':{
+                }, 'visible':function() {return (M.ciniki_materiamedica_main.edit.edit_section=='info'?'yes':'hidden');},
+			},
+			'_warnings':{'label':'Warnings', 'type':'simpleform', 'fields':{
 				'warnings':{'label':'', 'type':'textarea', 'size':'small', 'hidelabel':'yes'},
-			}},
+                }, 'visible':function() {return (M.ciniki_materiamedica_main.edit.edit_section=='info'?'yes':'hidden');},
+			},
 //			'_30':{'label':'Uses', 'aside':'yes', 'fields':{
 //				'tag-30':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new use:'},
 //				}},
 //			'_40':{'label':'Actions', 'aside':'yes', 'fields':{
 //				'tag-40':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new action:'},
 //				}},
-			'_contraindications':{'label':'Contraindications', 'aside':'yes', 'type':'simpleform', 'fields':{
+			'_contraindications':{'label':'Contraindications', 'type':'simpleform', 'fields':{
 				'contraindications':{'label':'', 'type':'textarea', 'size':'small', 'hidelabel':'yes'},
-			}},
-			'_quick_id':{'label':'Quick ID', 'aside':'yes', 'type':'simpleform', 'fields':{
+                }, 'visible':function() {return (M.ciniki_materiamedica_main.edit.edit_section=='info'?'yes':'hidden');},
+			},
+			'_quick_id':{'label':'Quick ID', 'type':'simpleform', 'fields':{
 				'quick_id':{'label':'', 'type':'textarea', 'size':'small', 'hidelabel':'yes'},
-			}},
+                }, 'visible':function() {return (M.ciniki_materiamedica_main.edit.edit_section=='info'?'yes':'hidden');},
+			},
 			'_habitat':{'label':'Habitat', 'type':'simpleform', 'fields':{
 				'habitat':{'label':'', 'type':'textarea', 'hidelabel':'yes'},
-			}},
+                }, 'visible':function() {return (M.ciniki_materiamedica_main.edit.edit_section=='habitat'?'yes':'hidden');},
+			},
 			'_cultivation':{'label':'Cultivation', 'type':'simpleform', 'fields':{
 				'cultivation':{'label':'', 'type':'textarea', 'hidelabel':'yes'},
-			}},
+                }, 'visible':function() {return (M.ciniki_materiamedica_main.edit.edit_section=='habitat'?'yes':'hidden');},
+			},
 			'_history':{'label':'History', 'type':'simpleform', 'fields':{
 				'history':{'label':'', 'type':'textarea', 'hidelabel':'yes'},
-			}},
-			'_notes':{'label':'Notes', 'type':'simpleform', 'fields':{
-				'notes':{'label':'', 'type':'textarea', 'hidelabel':'yes'},
-			}},
+                }, 'visible':function() {return (M.ciniki_materiamedica_main.edit.edit_section=='history'?'yes':'hidden');},
+			},
+			'_energetics':{'label':'Energetics', 'type':'simpleform', 'fields':{
+				'energetics':{'label':'', 'type':'textarea', 'hidelabel':'yes'},
+                }, 'visible':function() {return (M.ciniki_materiamedica_main.edit.edit_section=='history'?'yes':'hidden');},
+			},
+//			'_notes':{'label':'Notes', 'type':'simpleform', 'fields':{
+//				'notes':{'label':'', 'type':'textarea', 'hidelabel':'yes'},
+//               }, 'visible':function() {return (M.ciniki_materiamedica_main.edit.edit_section=='info'?'yes':'no');},
+//			},
 //			'_reference_notes':{'label':'References', 'type':'simpleform', 'fields':{
 //				'reference_notes':{'label':'', 'type':'textarea', 'hidelabel':'yes'},
 //			}},
@@ -667,10 +706,9 @@ function ciniki_materiamedica_main() {
 		}
 	};
 
-	this.plantEdit = function(cb, rid, type, type_name) {
-		if( rid != null ) {
-			this.edit.plant_id = rid;
-		}
+	this.plantEdit = function(cb, rid, section, type, type_name) {
+		if( rid != null ) { this.edit.plant_id = rid; }
+		if( section != null ) { this.edit.edit_section = section; }
 		if( this.edit.plant_id == 0 ) {
 			this.edit.reset();
 			this.edit.sections._buttons.buttons.delete.visible = 'no';
