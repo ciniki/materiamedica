@@ -28,10 +28,11 @@ function ciniki_materiamedica_main() {
 		'1':{'name':'Bark'},
 		'2':{'name':'Flowers'},
 		'3':{'name':'Fruits'},
-		'4':{'name':'Leaves'},
-		'5':{'name':'Roots'},
-		'6':{'name':'Seeds'},
-		'7':{'name':'Stems'},
+		'4':{'name':'Roots'},
+		'5':{'name':'Seeds'},
+		'6':{'name':'Stems'},
+		'7':{'name':'Leaves'},
+		'8':{'name':'Wood'},
 		};
     this.systems = {
         '10':{'name':'General'},
@@ -555,7 +556,7 @@ function ciniki_materiamedica_main() {
             '_primary_actions':{'label':'Primary Actions', 'aside':'yes', 'fields':{
                 'primary_actions':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new primary action:'},
             }},
-            '_secondary_actions':{'label':'Secondary Actions', 'visible':'no', 'aside':'yes', 'fields':{
+            '_secondary_actions':{'label':'Secondary Actions', 'active':'no', 'aside':'yes', 'fields':{
                 'secondary_actions':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new secondary action:'},
             }},
             '_ailments':{'label':'Ailments', 'aside':'yes', 'fields':{
