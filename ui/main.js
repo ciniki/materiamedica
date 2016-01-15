@@ -45,6 +45,10 @@ function ciniki_materiamedica_main() {
         '180':{'name':'Skin'},
         '200':{'name':'Immune'},
         '220':{'name':'Endocrine'},
+        '230':{'name':'Special Senses'},
+        '240':{'name':'Mental'},
+        '245':{'name':'Emotional'},
+        '250':{'name':'Spiritual'},
         };
 	this.init = function() {
 		//
@@ -322,6 +326,7 @@ function ciniki_materiamedica_main() {
                 switch (i) {
                     case '10': return 'Primary';
                     case '20': return 'Secondary';
+                    case '100': return 'Ailments';
                 }
             }
             return d.label;
@@ -539,7 +544,7 @@ function ciniki_materiamedica_main() {
         //
         this.system = new M.panel('Plant System',
             'ciniki_materiamedica_main', 'system',
-            'mc', 'medium', 'sectioned', 'ciniki.materiamedica.main.system');
+            'mc', 'medium mediumaside', 'sectioned', 'ciniki.materiamedica.main.system');
         this.system.plant_id = 0;
         this.system.system_num = 0;
         this.system.data = null;
@@ -547,11 +552,14 @@ function ciniki_materiamedica_main() {
             '_system':{'label':'', 'fields':{
                 'system_num':{'label':'System', 'active':'no', 'type':'select', 'options':[]},
             }},
-            '_primary_actions':{'label':'Primary Actions', 'fields':{
+            '_primary_actions':{'label':'Primary Actions', 'aside':'yes', 'fields':{
                 'primary_actions':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new primary action:'},
             }},
-            '_secondary_actions':{'label':'Secondary Actions', 'fields':{
+            '_secondary_actions':{'label':'Secondary Actions', 'visible':'no', 'aside':'yes', 'fields':{
                 'secondary_actions':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new secondary action:'},
+            }},
+            '_ailments':{'label':'Ailments', 'aside':'yes', 'fields':{
+                'ailments':{'label':'', 'hidelabel':'yes', 'type':'tags', 'tags':[], 'hint':'Enter a new secondary action:'},
             }},
             'notes':{'label':'Notes', 'visible':function() {
                 return (M.ciniki_materiamedica_main.system.system_num==0?'no':'yes');
@@ -807,6 +815,7 @@ function ciniki_materiamedica_main() {
                 p.data = rsp.system;
                 p.sections._primary_actions.fields.primary_actions.tags = rsp.actions.slice(0);
                 p.sections._secondary_actions.fields.secondary_actions.tags = rsp.actions.slice(0);
+                p.sections._ailments.fields.ailments.tags = rsp.ailments.slice(0);
                 var options = [];
                 for(var i in M.ciniki_materiamedica_main.systems) {
                     if( M.ciniki_materiamedica_main.plant.data.systems == null || M.ciniki_materiamedica_main.plant.data.systems[i] == null ) {

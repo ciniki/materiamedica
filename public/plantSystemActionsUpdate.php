@@ -27,6 +27,7 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
             'validlist'=>array('10', '40', '60', '80', '100', '120', '140', '160', '180', '200', '220'), 'name'=>'System'), 
         'primary_actions'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Primary Actions'), 
         'secondary_actions'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Secondary Actions'), 
+        'ailments'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Ailments'), 
         )); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
@@ -73,6 +74,9 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
     }
     if( isset($rc['types']['20']) ) {
         $system['secondary_actions'] = $rc['types']['20']['actions'];
+    }
+    if( isset($rc['types']['100']) ) {
+        $system['ailments'] = $rc['types']['100']['actions'];
     }
 
 	//  
@@ -154,6 +158,44 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
     if( isset($system['secondary_actions']) ) {
         foreach($system['secondary_actions'] as $action => $action_details) {
             if( !in_array($action, $args['secondary_actions']) ) {
+                $rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_action', 
+                    $action_details['id'], $action_details['uuid'], 0x04);
+                if( $rc['stat'] != 'ok' ) {
+                    ciniki_core_dbTransactionRollback($ciniki, 'ciniki.materiamedica');
+                    return $rc;
+                }
+            }
+        }
+    }
+
+    //
+    // Add secondary actions that do not exist in the database
+    //
+    if( isset($args['ailments']) && is_array($args['ailments']) ) {
+        foreach($args['ailments'] as $action) {
+            if( $action == '' ) { 
+                continue;
+            }
+            if( !isset($system['ailments'][$action]) ) {
+                $rc = ciniki_core_objectAdd($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_action', array(
+                    'plant_id'=>$args['plant_id'],
+                    'system'=>$args['system_num'],
+                    'action_type'=>'100',
+                    'action'=>$action,
+                    ), 0x04);
+                if( $rc['stat'] != 'ok' ) {
+                    ciniki_core_dbTransactionRollback($ciniki, 'ciniki.materiamedica');
+                    return $rc;
+                }
+            }
+        }
+    }
+    //
+    // Remove secondary actions that do not exist in the arguments
+    //
+    if( isset($system['ailments']) ) {
+        foreach($system['ailments'] as $action => $action_details) {
+            if( !in_array($action, $args['ailments']) ) {
                 $rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_action', 
                     $action_details['id'], $action_details['uuid'], 0x04);
                 if( $rc['stat'] != 'ok' ) {

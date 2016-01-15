@@ -71,6 +71,9 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
         if( isset($rc['types']['20']) ) {
             $system['secondary_actions'] = $rc['types']['20']['actions'];
         }
+        if( isset($rc['types']['100']) ) {
+            $system['ailments'] = $rc['types']['100']['actions'];
+        }
 
         //
         // Get any notes
@@ -89,7 +92,7 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
         }
 	}
 
-	$rsp = array('stat'=>'ok', 'system'=>$system, 'actions'=>array());
+	$rsp = array('stat'=>'ok', 'system'=>$system, 'actions'=>array(), 'ailments'=>array());
 
     //
     // Lookup all the actions
@@ -97,6 +100,7 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
     $strsql = "SELECT DISTINCT action "
         . "FROM ciniki_materiamedica_plant_actions "
         . "WHERE ciniki_materiamedica_plant_actions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "AND (action_type = 10 OR action_type = 20) "
         . "ORDER BY action "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQueryList');
@@ -106,6 +110,24 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
     }
     if( isset($rc['actions']) ) {
         $rsp['actions'] = $rc['actions'];
+    }
+
+    //
+    // Lookup all ailments
+    //
+    $strsql = "SELECT DISTINCT action "
+        . "FROM ciniki_materiamedica_plant_actions "
+        . "WHERE ciniki_materiamedica_plant_actions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "AND action_type = 100 "
+        . "ORDER BY action "
+        . "";
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQueryList');
+    $rc = ciniki_core_dbQueryList($ciniki, $strsql, 'ciniki.materiamedica', 'actions', 'action');
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    if( isset($rc['actions']) ) {
+        $rsp['ailments'] = $rc['actions'];
     }
 
     return $rsp;

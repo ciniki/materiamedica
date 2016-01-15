@@ -25,12 +25,17 @@
 #                   180 - Skin
 #                   200 - Immune
 #                   220 - Endocrine
+#                   230 - Special Senses
+#                   240 - Mental
+#                   245 - Emotional
+#                   250 - Spiritual
 #
 # action_type:      The type of action.
 #
 #                   0 - Unknown
 #                   10 - Primary
 #                   20 - Secondary
+#                   100 - Ailments
 #
 # action:           The action the plant has on the system.
 #
