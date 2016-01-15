@@ -581,7 +581,7 @@ function ciniki_materiamedica_main() {
 				'system_num':this.system_num, 'field':i}};
 		}
 		this.system.cellValue = function(s, i, j, d) {
-            return d.content;
+            return d.content.replace(/\n/g,'<br/>');
 		};
 		this.system.rowFn = function(s, i, d) {
             return 'M.ciniki_materiamedica_main.noteEdit(\'M.ciniki_materiamedica_main.system.refreshNotes();\',\'' + d.note_key + '\',\'' + d.id + '\');';
