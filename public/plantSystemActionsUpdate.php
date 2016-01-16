@@ -24,7 +24,7 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
         'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
         'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'plant'), 
         'system_num'=>array('required'=>'yes', 'blank'=>'no', 
-            'validlist'=>array('10', '40', '60', '80', '100', '120', '140', '160', '180', '200', '220'), 'name'=>'System'), 
+            'validlist'=>array('10', '40', '60', '80', '100', '120', '140', '160', '180', '200', '220', '230', '240', '245', '250'), 'name'=>'System'), 
         'primary_actions'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Primary Actions'), 
         'secondary_actions'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Secondary Actions'), 
         'ailments'=>array('required'=>'no', 'blank'=>'yes', 'type'=>'list', 'delimiter'=>'::', 'name'=>'Ailments'), 
