@@ -14,21 +14,21 @@
 # system:           The system the plant will affect.
 # 
 #                   0 - Unknown
-#                   10 - General
-#                   40 - Digestive
-#                   60 - Cardiovascular
-#                   80 - Respiratory
-#                   100 - Nervous
-#                   120 - Urinary
-#                   140 - Reproductive
-#                   160 - Muscoloskeletal
-#                   180 - Skin
-#                   200 - Immune
-#                   220 - Endocrine
-#                   230 - Special Senses
-#                   240 - Mental
-#                   245 - Emotional
-#                   250 - Spiritual
+#                   10 - [Ge] General
+#                   40 - [Di] Digestive
+#                   60 - [Ca] Cardiovascular
+#                   80 - [Rs] Respiratory
+#                   100 - [Ne] Nervous
+#                   120 - [Ur] Urinary
+#                   140 - [Rp] Reproductive
+#                   160 - [Mu] Muscoloskeletal
+#                   180 - [Sk] Skin
+#                   200 - [Im] Immune
+#                   220 - [En] Endocrine
+#                   230 - [Ss] Special Senses
+#                   240 - [Me] Mental
+#                   245 - [Em] Emotional
+#                   250 - [Sp] Spiritual
 #
 # action_type:      The type of action.
 #
