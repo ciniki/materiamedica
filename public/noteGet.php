@@ -8,8 +8,8 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id: 		The ID of the business to get the note from.
-// note_id:			The ID of the note to get.
+// business_id:         The ID of the business to get the note from.
+// note_id:         The ID of the note to get.
 // 
 // Returns
 // -------
@@ -38,36 +38,36 @@ function ciniki_materiamedica_noteGet($ciniki) {
         return $rc;
     }   
 
-	//
-	// Load the business intl settings
-	//
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'intlSettings');
-	$rc = ciniki_businesses_intlSettings($ciniki, $args['business_id']);
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	$intl_timezone = $rc['settings']['intl-default-timezone'];
+    //
+    // Load the business intl settings
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'intlSettings');
+    $rc = ciniki_businesses_intlSettings($ciniki, $args['business_id']);
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    $intl_timezone = $rc['settings']['intl-default-timezone'];
 
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'dateFormat');
-
-
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryIDTree');
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryArrayTree');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'dateFormat');
 
 
-	if( $args['note_id'] == 0 ) {
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbQuote');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryIDTree');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryArrayTree');
+
+
+    if( $args['note_id'] == 0 ) {
         $date_format = ciniki_users_dateFormat($ciniki, 'php');
         $dt = new DateTime('now', new DateTimeZone($intl_timezone));
-		$note = array(
-			'id'=>'0',
-			'flags'=>'',
-			'note_date'=>$dt->format($date_format),
-			'content'=>'',
-			);
+        $note = array(
+            'id'=>'0',
+            'flags'=>'',
+            'note_date'=>$dt->format($date_format),
+            'content'=>'',
+            );
         return array('stat'=>'ok', 'note'=>$note);
-	} 
+    } 
 
     $date_format = ciniki_users_dateFormat($ciniki, 'mysql');
     $strsql = "SELECT ciniki_materiamedica_notes.id, "
@@ -106,6 +106,6 @@ function ciniki_materiamedica_noteGet($ciniki) {
         }
     }
 
-	return array('stat'=>'ok', 'note'=>$note);
+    return array('stat'=>'ok', 'note'=>$note);
 }
 ?>

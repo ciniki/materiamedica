@@ -8,6 +8,7 @@
 # Common Name Notes - (ciniki.materiamedica.plant-34-common_name)
 # System Notes for general system - (ciniki.materiamedica.plant-34-system-10)
 # Notes for harvesting - (ciniki.materiamedica.plant-34-cinki.materiamedica.plantharvesting-4)
+# Ailment Notes (ciniki.materiamedica.ailment-29-plant-34)
 #
 # When showing notes, the module can query for object/object_id/note_key and get the list of notes back.
 #
@@ -22,9 +23,16 @@
 # note_key:         The key for the note. Keys can be duplicated to allow for multiple notes
 #                   for the same object.
 #
+# plant_id:         The ID for the plant the note relates to if any.
+# plant_system:     The plant system the note relates if any.
+# 
+# ailment_id:       The ID of the ailment the note is for, if any.
+#
+# preparation_id:   The ID of the preparation the note is for, if any.
+#
 # flags:            The options for the note.
 #
-#                   0x01 - Primary
+#                   0x01 - Primary (Favourite)
 #
 # note_date:        The date of the note as specified by the user.
 #
@@ -38,6 +46,10 @@ create table ciniki_materiamedica_notes (
     uuid char(36) not null,
     business_id int not null,
     note_key varchar(500) not null,
+    plant_id int not null,
+    plant_system tinyint unsigned not null,
+    ailment_id int not null,
+    preparation_id int not null,
     flags tinyint unsigned not null,
     note_date date not null,
     content varchar(5000) not null,
@@ -46,5 +58,6 @@ create table ciniki_materiamedica_notes (
     primary key (id),
     unique index (uuid),
     index (note_key),
+    index (plant_id, plant_system, ailment_id, preparation_id),
     index sync (business_id, uuid, last_updated)
 ) ENGINE='InnoDB', COMMENT='v1.01';

@@ -7,8 +7,8 @@
 // Arguments
 // ---------
 // ciniki:
-// business_id:			The business ID to check the session user against.
-// method:				The requested method.
+// business_id:         The business ID to check the session user against.
+// method:              The requested method.
 //
 // Returns
 // -------
@@ -16,17 +16,17 @@
 //
 function ciniki_materiamedica_notesLoad(&$ciniki, $business_id, $args) {
    
-	//
-	// Load the business intl settings
-	//
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'intlSettings');
-	$rc = ciniki_businesses_intlSettings($ciniki, $business_id);
-	if( $rc['stat'] != 'ok' ) {
-		return $rc;
-	}
-	$intl_timezone = $rc['settings']['intl-default-timezone'];
+    //
+    // Load the business intl settings
+    //
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'intlSettings');
+    $rc = ciniki_businesses_intlSettings($ciniki, $business_id);
+    if( $rc['stat'] != 'ok' ) {
+        return $rc;
+    }
+    $intl_timezone = $rc['settings']['intl-default-timezone'];
 
-	ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'dateFormat');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'users', 'private', 'dateFormat');
     $date_format = ciniki_users_dateFormat($ciniki, 'mysql');
 
     //
