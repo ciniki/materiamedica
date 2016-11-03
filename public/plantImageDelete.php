@@ -46,7 +46,7 @@ function ciniki_materiamedica_plantImageDelete(&$ciniki) {
         return $rc;
     }
     if( !isset($rc['item']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2562', 'msg'=>'Plant image does not exist'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.materiamedica.12', 'msg'=>'Plant image does not exist'));
     }
     $item = $rc['item'];
 

@@ -47,7 +47,7 @@ function ciniki_materiamedica_noteDelete(&$ciniki) {
         return $rc;
     }
     if( !isset($rc['item']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2672', 'msg'=>'Plant image does not exist'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.materiamedica.5', 'msg'=>'Plant image does not exist'));
     }
     $item = $rc['item'];
 

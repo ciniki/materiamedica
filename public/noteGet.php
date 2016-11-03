@@ -83,7 +83,7 @@ function ciniki_materiamedica_noteGet($ciniki) {
         return $rc;
     }
     if( !isset($rc['note']) ) {
-        return array('stat'=>'ok', 'err'=>array('pkg'=>'ciniki', 'code'=>'2673', 'msg'=>'Unable to find note'));
+        return array('stat'=>'ok', 'err'=>array('code'=>'ciniki.materiamedica.6', 'msg'=>'Unable to find note'));
     }
     $note = $rc['note'];
 

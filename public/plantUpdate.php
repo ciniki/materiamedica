@@ -83,7 +83,7 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
         return $rc;
     }
     if( !isset($rc['plant']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2566', 'msg'=>'That plant does not exist.'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.materiamedica.17', 'msg'=>'That plant does not exist.'));
     }
     $plant = $rc['plant'];
 
@@ -106,7 +106,7 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
             return $rc;
         }
         if( $rc['num_rows'] > 0 ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2567', 'msg'=>'You already have a plant with this name, please choose another name'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.materiamedica.18', 'msg'=>'You already have a plant with this name, please choose another name'));
         }
     }
 

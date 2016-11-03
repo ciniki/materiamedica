@@ -151,7 +151,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
             return $rc;
         }
         if( !isset($rc['plants']) ) {
-            return array('stat'=>'ok', 'err'=>array('pkg'=>'ciniki', 'code'=>'2600', 'msg'=>'Unable to find plant'));
+            return array('stat'=>'ok', 'err'=>array('code'=>'ciniki.materiamedica.8', 'msg'=>'Unable to find plant'));
         }
         $plant = $rc['plants'][0]['plant'];
 

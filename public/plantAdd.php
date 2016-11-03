@@ -83,7 +83,7 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
         return $rc;
     }
     if( $rc['num_rows'] > 0 ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2553', 'msg'=>'You already have a plant with this name, please choose another name.'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.materiamedica.7', 'msg'=>'You already have a plant with this name, please choose another name.'));
     }
 
     //  

@@ -62,7 +62,7 @@ function ciniki_materiamedica_plantImageUpdate(&$ciniki) {
         return $rc;
     }
     if( !isset($rc['item']) ) {
-        return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2564', 'msg'=>'Plant image not found'));
+        return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.materiamedica.15', 'msg'=>'Plant image not found'));
     }
     $item = $rc['item'];
 
@@ -86,7 +86,7 @@ function ciniki_materiamedica_plantImageUpdate(&$ciniki) {
             return $rc;
         }
         if( $rc['num_rows'] > 0 ) {
-            return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2565', 'msg'=>'You already have an image with this name, please choose another name'));
+            return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.materiamedica.16', 'msg'=>'You already have an image with this name, please choose another name'));
         }
     }
 

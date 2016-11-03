@@ -89,6 +89,6 @@ function ciniki_materiamedica_notesLoad(&$ciniki, $business_id, $args) {
         return array('stat'=>'ok', 'note_keys'=>$note_keys);
     }
 
-    return array('stat'=>'fail', 'err'=>array('pkg'=>'ciniki', 'code'=>'2689', 'msg'=>'Unable to find notes'));
+    return array('stat'=>'fail', 'err'=>array('code'=>'ciniki.materiamedica.4', 'msg'=>'Unable to find notes'));
 }
 ?>
