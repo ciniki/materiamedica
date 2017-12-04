@@ -8,7 +8,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the plant from.
+// tnid:         The ID of the tenant to get the plant from.
 // plant_id:            The ID of the plant to get.
 // 
 // Returns
@@ -20,7 +20,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Item'), 
         'images'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Images'),
         'tags'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Tags'),
@@ -34,10 +34,10 @@ function ciniki_materiamedica_plantGet($ciniki) {
     
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantGet'); 
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['tnid'], 'ciniki.materiamedica.plantGet'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -71,7 +71,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
         //
         $strsql = "SELECT MAX(plant_number) AS plant_number "
             . "FROM ciniki_materiamedica_plants "
-            . "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+            . "WHERE ciniki_materiamedica_plants.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . "";
         $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.materiamedica', 'max');
         if( $rc['stat'] != 'ok' ) {
@@ -131,7 +131,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
             . "ciniki_materiamedica_plants.notes, "
             . "ciniki_materiamedica_plants.reference_notes "
             . "FROM ciniki_materiamedica_plants "
-            . "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+            . "WHERE ciniki_materiamedica_plants.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . "AND ciniki_materiamedica_plants.id = '" . ciniki_core_dbQuote($ciniki, $args['plant_id']) . "' "
             . "";
 
@@ -161,7 +161,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
         $strsql = "SELECT CONCAT('tag-', tag_type) AS tagtype, tag_type, tag_name AS lists "
             . "FROM ciniki_materiamedica_plant_tags "
             . "WHERE plant_id = '" . ciniki_core_dbQuote($ciniki, $args['plant_id']) . "' "
-            . "AND business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+            . "AND tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . "ORDER BY tag_type, tag_name "
             . "";
         $rc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.materiamedica', array(
@@ -185,7 +185,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
             $strsql = "SELECT id, system, action_type, action AS actions "
                 . "FROM ciniki_materiamedica_plant_actions "
                 . "WHERE plant_id = '" . ciniki_core_dbQuote($ciniki, $args['plant_id']) . "' "
-                . "AND business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+                . "AND tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
                 . "ORDER BY system, action_type, action "
                 . "";
             $rc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.materiamedica', array(
@@ -211,7 +211,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
             $strsql = "SELECT id, image_id, name, flags, parts, webflags, description "
                 . "FROM ciniki_materiamedica_plant_images "
                 . "WHERE plant_id = '" . ciniki_core_dbQuote($ciniki, $args['plant_id']) . "' "
-                . "AND business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+                . "AND tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
                 . "ORDER BY date_added, name "
                 . "";
             $rc = ciniki_core_dbHashQueryArrayTree($ciniki, $strsql, 'ciniki.materiamedica', array(
@@ -225,7 +225,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
                 $plant['images'] = $rc['images'];
                 foreach($plant['images'] as $inum => $img) {
                     if( isset($img['image_id']) && $img['image_id'] > 0 ) {
-                        $rc = ciniki_images_loadCacheThumbnail($ciniki, $args['business_id'], $img['image_id'], 75);
+                        $rc = ciniki_images_loadCacheThumbnail($ciniki, $args['tnid'], $img['image_id'], 75);
                         if( $rc['stat'] != 'ok' ) {
                             return $rc;
                         }
@@ -240,7 +240,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
         //
         if( isset($args['notes']) && $args['notes'] == 'yes' ) {
             ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'notesLoad');
-            $rc = ciniki_materiamedica_notesLoad($ciniki, $args['business_id'], array('like_key'=>'ciniki.materiamedica.plant-' . $args['plant_id']));
+            $rc = ciniki_materiamedica_notesLoad($ciniki, $args['tnid'], array('like_key'=>'ciniki.materiamedica.plant-' . $args['plant_id']));
             if( $rc['stat'] != 'ok' ) { 
                 return $rc;
             }
@@ -262,7 +262,7 @@ function ciniki_materiamedica_plantGet($ciniki) {
         //
         $strsql = "SELECT DISTINCT CONCAT('tag-', tag_type) AS tagtype, tag_type, tag_name AS tag_names "
             . "FROM ciniki_materiamedica_plant_tags "
-            . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+            . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . "ORDER BY tag_type, tag_name "
             . "";
         $rc = ciniki_core_dbHashQueryIDTree($ciniki, $strsql, 'ciniki.materiamedica', array(

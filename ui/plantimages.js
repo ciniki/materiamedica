@@ -68,12 +68,12 @@ function ciniki_materiamedica_plantimages() {
             return ''; 
         };
         this.edit.fieldHistoryArgs = function(s, i) {
-            return {'method':'ciniki.materiamedica.plantImageHistory', 'args':{'business_id':M.curBusinessID, 
+            return {'method':'ciniki.materiamedica.plantImageHistory', 'args':{'tnid':M.curTenantID, 
                 'plant_image_id':this.plant_image_id, 'field':i}};
         };
         this.edit.liveSearchCb = function(s, i, value) {
             if( i == 'location' ) {
-                var rsp = M.api.getJSONBgCb('ciniki.materiamedica.plantImageSearchField', {'business_id':M.curBusinessID, 'field':i, 'start_needle':value, 'limit':15},
+                var rsp = M.api.getJSONBgCb('ciniki.materiamedica.plantImageSearchField', {'tnid':M.curTenantID, 'field':i, 'start_needle':value, 'limit':15},
                     function(rsp) {
                         M.ciniki_materiamedica_plantimages.edit.liveSearchShow(s, i, M.gE(M.ciniki_materiamedica_plantimages.edit.panelUID + '_' + i), rsp.results);
                     });
@@ -136,7 +136,7 @@ function ciniki_materiamedica_plantimages() {
         }
         if( this.edit.plant_image_id > 0 ) {
             var rsp = M.api.getJSONCb('ciniki.materiamedica.plantImageGet', 
-                {'business_id':M.curBusinessID, 'plant_image_id':this.edit.plant_image_id}, function(rsp) {
+                {'tnid':M.curTenantID, 'plant_image_id':this.edit.plant_image_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;
@@ -167,7 +167,7 @@ function ciniki_materiamedica_plantimages() {
 //          }
             if( c != null ) {
                 var rsp = M.api.postJSONFormData('ciniki.materiamedica.plantImageUpdate', 
-                    {'business_id':M.curBusinessID, 
+                    {'tnid':M.curTenantID, 
                     'plant_image_id':this.edit.plant_image_id}, c,
                         function(rsp) {
                             if( rsp.stat != 'ok' ) {
@@ -185,7 +185,7 @@ function ciniki_materiamedica_plantimages() {
             var flags = this.edit.formValue('flags1') | this.edit.formValue('flags2') | this.edit.formValue('flags3');
             c.append('flags', flags);
             var rsp = M.api.postJSONFormData('ciniki.materiamedica.plantImageAdd', 
-                {'business_id':M.curBusinessID, 'plant_id':this.edit.plant_id}, c,
+                {'tnid':M.curTenantID, 'plant_id':this.edit.plant_id}, c,
                     function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
@@ -199,7 +199,7 @@ function ciniki_materiamedica_plantimages() {
 
     this.imageDelete = function() {
         if( confirm('Are you sure you want to delete this image?') ) {
-            var rsp = M.api.getJSONCb('ciniki.materiamedica.plantImageDelete', {'business_id':M.curBusinessID, 
+            var rsp = M.api.getJSONCb('ciniki.materiamedica.plantImageDelete', {'tnid':M.curTenantID, 
                 'plant_image_id':this.edit.plant_image_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);

@@ -51,11 +51,11 @@ function ciniki_materiamedica_notes() {
             return 'M.ciniki_materiamedica_notes.citationEdit(' + d.id + ');';
         };
         this.edit.fieldHistoryArgs = function(s, i) {
-            return {'method':'ciniki.materiamedica.noteHistory', 'args':{'business_id':M.curBusinessID, 
+            return {'method':'ciniki.materiamedica.noteHistory', 'args':{'tnid':M.curTenantID, 
                 'note_id':this.note_id, 'field':i}};
         };
         this.edit.refreshCitations = function() {
-            M.api.getJSONCb('ciniki.materiamedica.noteGet', {'business_id':M.curBusinessID, 'note_id':this.note_id, 'citations':'yes'}, function(rsp) {
+            M.api.getJSONCb('ciniki.materiamedica.noteGet', {'tnid':M.curTenantID, 'note_id':this.note_id, 'citations':'yes'}, function(rsp) {
                 if( rsp.stat != 'ok' ) {
                     M.api.err(rsp);
                     return false;
@@ -83,7 +83,7 @@ function ciniki_materiamedica_notes() {
             return false;
         }
 
-        this.edit.sections.citations.visible = (M.curBusiness.modules['ciniki.citations'] != null?'yes':'no');
+        this.edit.sections.citations.visible = (M.curTenant.modules['ciniki.citations'] != null?'yes':'no');
 
         this.noteEdit(cb, args.note_key, (args.note_id==null?0:args.note_id));
     }
@@ -91,7 +91,7 @@ function ciniki_materiamedica_notes() {
     this.noteEdit = function(cb, nkey, nid) {
         if( nkey != null ) { this.edit.note_key = nkey; }
         if( nid != null ) { this.edit.note_id = nid; }
-        M.api.getJSONCb('ciniki.materiamedica.noteGet', {'business_id':M.curBusinessID, 'note_id':this.edit.note_id}, function(rsp) {
+        M.api.getJSONCb('ciniki.materiamedica.noteGet', {'tnid':M.curTenantID, 'note_id':this.edit.note_id}, function(rsp) {
             if( rsp.stat != 'ok' ) {
                 M.api.err(rsp);
                 return false;
@@ -106,7 +106,7 @@ function ciniki_materiamedica_notes() {
     this.citationEdit = function(cid) {
         if( this.edit.note_id == 0 ) {
             var c = this.edit.serializeForm('yes');
-            M.api.postJSONCb('ciniki.materiamedica.noteAdd', {'business_id':M.curBusinessID, 'note_key':this.edit.note_key}, c,
+            M.api.postJSONCb('ciniki.materiamedica.noteAdd', {'tnid':M.curTenantID, 'note_key':this.edit.note_key}, c,
                 function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
@@ -126,7 +126,7 @@ function ciniki_materiamedica_notes() {
         if( this.edit.note_id > 0 ) {
             var c = this.edit.serializeForm('no');
             if( c != null ) {
-                var rsp = M.api.postJSONCb('ciniki.materiamedica.noteUpdate', {'business_id':M.curBusinessID, 'note_id':this.edit.note_id}, c,
+                var rsp = M.api.postJSONCb('ciniki.materiamedica.noteUpdate', {'tnid':M.curTenantID, 'note_id':this.edit.note_id}, c,
                     function(rsp) {
                         if( rsp.stat != 'ok' ) {
                             M.api.err(rsp);
@@ -140,7 +140,7 @@ function ciniki_materiamedica_notes() {
             }
         } else {
             var c = this.edit.serializeForm('yes');
-            M.api.postJSONCb('ciniki.materiamedica.noteAdd', {'business_id':M.curBusinessID, 'note_key':this.edit.note_key}, c,
+            M.api.postJSONCb('ciniki.materiamedica.noteAdd', {'tnid':M.curTenantID, 'note_key':this.edit.note_key}, c,
                 function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
@@ -154,7 +154,7 @@ function ciniki_materiamedica_notes() {
 
     this.noteDelete = function() {
         if( confirm('Are you sure you want to delete this note?') ) {
-            M.api.getJSONCb('ciniki.materiamedica.noteDelete', {'business_id':M.curBusinessID, 
+            M.api.getJSONCb('ciniki.materiamedica.noteDelete', {'tnid':M.curTenantID, 
                 'note_id':this.edit.note_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);

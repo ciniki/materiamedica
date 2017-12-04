@@ -8,7 +8,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the plant from.
+// tnid:         The ID of the tenant to get the plant from.
 // plant_id:            The ID of the plant to get.
 // 
 // Returns
@@ -20,7 +20,7 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plant'), 
         'system_num'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'System'), 
         'notes'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Notes'), 
@@ -32,10 +32,10 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
     
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantSystemActionsGet'); 
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['tnid'], 'ciniki.materiamedica.plantSystemActionsGet'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -51,7 +51,7 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
             . "ciniki_materiamedica_plant_actions.action_type, "
             . "ciniki_materiamedica_plant_actions.action AS actions "
             . "FROM ciniki_materiamedica_plant_actions "
-            . "WHERE ciniki_materiamedica_plant_actions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+            . "WHERE ciniki_materiamedica_plant_actions.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . "AND ciniki_materiamedica_plant_actions.plant_id = '" . ciniki_core_dbQuote($ciniki, $args['plant_id']) . "' "
             . "AND ciniki_materiamedica_plant_actions.system = '" . ciniki_core_dbQuote($ciniki, $args['system_num']) . "' "
             . "ORDER BY system, action_type, action "
@@ -80,7 +80,7 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
         //
         if( isset($args['notes']) && $args['notes'] == 'yes' ) {
             ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'notesLoad');
-            $rc = ciniki_materiamedica_notesLoad($ciniki, $args['business_id'], array('key'=>'ciniki.materiamedica.plant-' . $args['plant_id'] . '-system-' . $args['system_num']));
+            $rc = ciniki_materiamedica_notesLoad($ciniki, $args['tnid'], array('key'=>'ciniki.materiamedica.plant-' . $args['plant_id'] . '-system-' . $args['system_num']));
             if( $rc['stat'] != 'ok' ) { 
                 return $rc;
             }
@@ -99,7 +99,7 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
     //
     $strsql = "SELECT DISTINCT action "
         . "FROM ciniki_materiamedica_plant_actions "
-        . "WHERE ciniki_materiamedica_plant_actions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE ciniki_materiamedica_plant_actions.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND (action_type = 10 OR action_type = 20) "
         . "ORDER BY action "
         . "";
@@ -117,7 +117,7 @@ function ciniki_materiamedica_plantSystemActionsGet($ciniki) {
     //
     $strsql = "SELECT DISTINCT action "
         . "FROM ciniki_materiamedica_plant_actions "
-        . "WHERE ciniki_materiamedica_plant_actions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE ciniki_materiamedica_plant_actions.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND action_type = 100 "
         . "ORDER BY action "
         . "";

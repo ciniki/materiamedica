@@ -7,20 +7,20 @@
 // Arguments
 // ---------
 // ciniki:
-// business_id:         The business ID to check the session user against.
+// tnid:         The tenant ID to check the session user against.
 // method:              The requested method.
 //
 // Returns
 // -------
 // <rsp stat='ok' />
 //
-function ciniki_materiamedica_notesLoad(&$ciniki, $business_id, $args) {
+function ciniki_materiamedica_notesLoad(&$ciniki, $tnid, $args) {
    
     //
-    // Load the business intl settings
+    // Load the tenant intl settings
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'intlSettings');
-    $rc = ciniki_businesses_intlSettings($ciniki, $business_id);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'intlSettings');
+    $rc = ciniki_tenants_intlSettings($ciniki, $tnid);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -39,7 +39,7 @@ function ciniki_materiamedica_notesLoad(&$ciniki, $business_id, $args) {
             . "DATE_FORMAT(note_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS note_date, "
             . "content "
             . "FROM ciniki_materiamedica_notes "
-            . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+            . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
             . "AND note_key = '" . ciniki_core_dbQuote($ciniki, $args['key']) . "' "
             . "ORDER BY note_key, (flags&0x01) DESC, note_date, date_added "
             . "";
@@ -66,7 +66,7 @@ function ciniki_materiamedica_notesLoad(&$ciniki, $business_id, $args) {
             . "DATE_FORMAT(note_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS note_date, "
             . "content "
             . "FROM ciniki_materiamedica_notes "
-            . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $business_id) . "' "
+            . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $tnid) . "' "
             . "AND (note_key LIKE '" . ciniki_core_dbQuote($ciniki, $args['like_key']) . "' "
                 . "OR note_key LIKE '" . ciniki_core_dbQuote($ciniki, $args['like_key']) . "-%' "
                 . ") "

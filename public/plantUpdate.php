@@ -8,7 +8,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:     The ID of the business to the plant is a part of.
+// tnid:     The ID of the tenant to the plant is a part of.
 // plant_id:        The ID of the plant to update.
 //
 // Returns
@@ -21,7 +21,7 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plant'), 
         'plant_number'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Number'), 
         'family'=>array('required'=>'no', 'blank'=>'no', 'name'=>'Family'), 
@@ -52,10 +52,10 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
 
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantUpdate'); 
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['tnid'], 'ciniki.materiamedica.plantUpdate'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }
@@ -75,7 +75,7 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
     //
     $strsql = "SELECT family, genus, species "
         . "FROM ciniki_materiamedica_plants "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND id = '" . ciniki_core_dbQuote($ciniki, $args['plant_id']) . "' "
         . "";
     $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.materiamedica', 'plant');
@@ -97,7 +97,7 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
         //
         $strsql = "SELECT id, permalink "
             . "FROM ciniki_materiamedica_plants "
-            . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+            . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
             . "AND permalink = '" . ciniki_core_dbQuote($ciniki, $args['permalink']) . "' "
             . "AND id <> '" . ciniki_core_dbQuote($ciniki, $args['plant_id']) . "' "
             . "";
@@ -126,7 +126,7 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
     // Update the plant
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectUpdate');
-    $rc = ciniki_core_objectUpdate($ciniki, $args['business_id'], 'ciniki.materiamedica.plant', 
+    $rc = ciniki_core_objectUpdate($ciniki, $args['tnid'], 'ciniki.materiamedica.plant', 
         $args['plant_id'], $args);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
@@ -142,7 +142,7 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
     foreach($tag_types as $tag_type => $arg_name) {
         if( isset($args['tag-' . $tag_type]) ) {
             ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'tagsUpdate');
-            $rc = ciniki_core_tagsUpdate($ciniki, 'ciniki.materiamedica', 'plant_tag', $args['business_id'],
+            $rc = ciniki_core_tagsUpdate($ciniki, 'ciniki.materiamedica', 'plant_tag', $args['tnid'],
                 'ciniki_materiamedica_plant_tags', 'ciniki_materiamedica_history',
                 'plant_id', $args['plant_id'], $tag_type, $args['tag-' . $tag_type]);
             if( $rc['stat'] != 'ok' ) {
@@ -161,11 +161,11 @@ function ciniki_materiamedica_plantUpdate(&$ciniki) {
     }
 
     //
-    // Update the last_change date in the business modules
+    // Update the last_change date in the tenant modules
     // Ignore the result, as we don't want to stop user updates if this fails.
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
-    ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'materiamedica');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'updateModuleChangeDate');
+    ciniki_tenants_updateModuleChangeDate($ciniki, $args['tnid'], 'ciniki', 'materiamedica');
 
     return array('stat'=>'ok');
 }

@@ -12,7 +12,7 @@ function ciniki_materiamedica_plantSearchField($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'field'=>array('required'=>'yes', 'blank'=>'no', 'validlist'=>array('family', 'genus', 'species', 'common_name'), 'name'=>'Field'),
         'start_needle'=>array('required'=>'yes', 'blank'=>'yes', 'name'=>'Search String'), 
         'limit'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Limit'), 
@@ -24,21 +24,21 @@ function ciniki_materiamedica_plantSearchField($ciniki) {
     
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantSearchField'); 
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['tnid'], 'ciniki.materiamedica.plantSearchField'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
 
     //
-    // Get the number of faqs in each status for the business, 
+    // Get the number of faqs in each status for the tenant, 
     // if no rows found, then return empty array
     //
     $strsql = "SELECT " . $args['field'] . " AS name "
         . "FROM ciniki_materiamedica_plants "
-        . "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE ciniki_materiamedica_plants.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND (" . $args['field']  . " LIKE '" . ciniki_core_dbQuote($ciniki, $args['start_needle']) . "%' "
             . "AND " . $args['field'] . " <> '' "
             . ") "

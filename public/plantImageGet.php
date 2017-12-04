@@ -7,7 +7,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to add the plant image to.
+// tnid:         The ID of the tenant to add the plant image to.
 // plant_image_id:      The ID of the plant image to get.
 //
 // Returns
@@ -19,7 +19,7 @@ function ciniki_materiamedica_plantImageGet($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'plant_image_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plant Image'),
         )); 
     if( $rc['stat'] != 'ok' ) { 
@@ -29,10 +29,10 @@ function ciniki_materiamedica_plantImageGet($ciniki) {
 
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantImageGet'); 
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['tnid'], 'ciniki.materiamedica.plantImageGet'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -56,7 +56,7 @@ function ciniki_materiamedica_plantImageGet($ciniki) {
         . "ciniki_materiamedica_plant_images.image_id, "
         . "ciniki_materiamedica_plant_images.description "
         . "FROM ciniki_materiamedica_plant_images "
-        . "WHERE ciniki_materiamedica_plant_images.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE ciniki_materiamedica_plant_images.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND ciniki_materiamedica_plant_images.id = '" . ciniki_core_dbQuote($ciniki, $args['plant_image_id']) . "' "
         . "";
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbHashQueryTree');
@@ -78,7 +78,7 @@ function ciniki_materiamedica_plantImageGet($ciniki) {
     $strsql = "SELECT image_id "
         . "FROM ciniki_materiamedica_plants "
         . "WHERE ciniki_materiamedica_plants.id = '" . ciniki_core_dbQuote($ciniki, $image['plant_id']) . "' "
-        . "AND ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "AND ciniki_materiamedica_plants.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "";
     $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.materiamedica', 'plant');
     if( $rc['stat'] != 'ok' ) {

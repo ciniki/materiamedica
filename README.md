@@ -1,4 +1,4 @@
-Ciniki - Small Business Management Platform
+Ciniki - Multitenant Cloud Platform
 ===========================================
 
 The Materia Medica module is used for storing botanical information to be used by herbal and chinese medicine.

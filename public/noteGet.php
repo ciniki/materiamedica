@@ -8,7 +8,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the note from.
+// tnid:         The ID of the tenant to get the note from.
 // note_id:         The ID of the note to get.
 // 
 // Returns
@@ -20,7 +20,7 @@ function ciniki_materiamedica_noteGet($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'note_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Note'), 
         )); 
     if( $rc['stat'] != 'ok' ) { 
@@ -30,19 +30,19 @@ function ciniki_materiamedica_noteGet($ciniki) {
     
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.noteGet'); 
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['tnid'], 'ciniki.materiamedica.noteGet'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
 
     //
-    // Load the business intl settings
+    // Load the tenant intl settings
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'intlSettings');
-    $rc = ciniki_businesses_intlSettings($ciniki, $args['business_id']);
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'intlSettings');
+    $rc = ciniki_tenants_intlSettings($ciniki, $args['tnid']);
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
@@ -75,7 +75,7 @@ function ciniki_materiamedica_noteGet($ciniki) {
         . "DATE_FORMAT(ciniki_materiamedica_notes.note_date, '" . ciniki_core_dbQuote($ciniki, $date_format) . "') AS note_date, "
         . "ciniki_materiamedica_notes.content "
         . "FROM ciniki_materiamedica_notes "
-        . "WHERE ciniki_materiamedica_notes.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE ciniki_materiamedica_notes.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND ciniki_materiamedica_notes.id = '" . ciniki_core_dbQuote($ciniki, $args['note_id']) . "' "
         . "";
     $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.materiamedica', 'note');
@@ -91,9 +91,9 @@ function ciniki_materiamedica_noteGet($ciniki) {
     // Get the list of references for the note
     //
     $note['citations'] = array();
-    if( isset($ciniki['business']['modules']['ciniki.citations']) ) {
+    if( isset($ciniki['tenant']['modules']['ciniki.citations']) ) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'citations', 'hooks', 'getObjectCitations');
-        $rc = ciniki_citations_hooks_getObjectCitations($ciniki, $args['business_id'], array(
+        $rc = ciniki_citations_hooks_getObjectCitations($ciniki, $args['tnid'], array(
             'object'=>'ciniki.materiamedica.note',
             'object_id'=>$args['note_id'],
             ));

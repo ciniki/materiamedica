@@ -8,7 +8,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:     The ID of the business to the plant is a part of.
+// tnid:     The ID of the tenant to the plant is a part of.
 // plant_id:        The ID of the plant to update.
 //
 // Returns
@@ -21,7 +21,7 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'plant'), 
         'system_num'=>array('required'=>'yes', 'blank'=>'no', 
             'validlist'=>array('10', '40', '60', '80', '100', '120', '140', '160', '180', '200', '220', '230', '240', '245', '250'), 'name'=>'System'), 
@@ -36,10 +36,10 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
 
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantSystemActionsUpdate'); 
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['tnid'], 'ciniki.materiamedica.plantSystemActionsUpdate'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }
@@ -53,7 +53,7 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
         . "ciniki_materiamedica_plant_actions.action_type, "
         . "ciniki_materiamedica_plant_actions.action "
         . "FROM ciniki_materiamedica_plant_actions "
-        . "WHERE ciniki_materiamedica_plant_actions.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE ciniki_materiamedica_plant_actions.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND ciniki_materiamedica_plant_actions.plant_id = '" . ciniki_core_dbQuote($ciniki, $args['plant_id']) . "' "
         . "AND ciniki_materiamedica_plant_actions.system = '" . ciniki_core_dbQuote($ciniki, $args['system_num']) . "' "
         . "ORDER BY system, action_type "
@@ -102,7 +102,7 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
                 continue;
             }
             if( !isset($system['primary_actions'][$action]) ) {
-                $rc = ciniki_core_objectAdd($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_action', array(
+                $rc = ciniki_core_objectAdd($ciniki, $args['tnid'], 'ciniki.materiamedica.plant_action', array(
                     'plant_id'=>$args['plant_id'],
                     'system'=>$args['system_num'],
                     'action_type'=>'10',
@@ -120,7 +120,7 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
         if( isset($system['primary_actions']) ) {
             foreach($system['primary_actions'] as $action => $action_details) {
                 if( !in_array($action, $args['primary_actions']) ) {
-                    $rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_action', 
+                    $rc = ciniki_core_objectDelete($ciniki, $args['tnid'], 'ciniki.materiamedica.plant_action', 
                         $action_details['id'], $action_details['uuid'], 0x04);
                     if( $rc['stat'] != 'ok' ) {
                         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.materiamedica');
@@ -140,7 +140,7 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
                 continue;
             }
             if( !isset($system['secondary_actions'][$action]) ) {
-                $rc = ciniki_core_objectAdd($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_action', array(
+                $rc = ciniki_core_objectAdd($ciniki, $args['tnid'], 'ciniki.materiamedica.plant_action', array(
                     'plant_id'=>$args['plant_id'],
                     'system'=>$args['system_num'],
                     'action_type'=>'20',
@@ -158,7 +158,7 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
         if( isset($system['secondary_actions']) ) {
             foreach($system['secondary_actions'] as $action => $action_details) {
                 if( !in_array($action, $args['secondary_actions']) ) {
-                    $rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_action', 
+                    $rc = ciniki_core_objectDelete($ciniki, $args['tnid'], 'ciniki.materiamedica.plant_action', 
                         $action_details['id'], $action_details['uuid'], 0x04);
                     if( $rc['stat'] != 'ok' ) {
                         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.materiamedica');
@@ -178,7 +178,7 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
                 continue;
             }
             if( !isset($system['ailments'][$action]) ) {
-                $rc = ciniki_core_objectAdd($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_action', array(
+                $rc = ciniki_core_objectAdd($ciniki, $args['tnid'], 'ciniki.materiamedica.plant_action', array(
                     'plant_id'=>$args['plant_id'],
                     'system'=>$args['system_num'],
                     'action_type'=>'100',
@@ -196,7 +196,7 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
         if( isset($system['ailments']) ) {
             foreach($system['ailments'] as $action => $action_details) {
                 if( !in_array($action, $args['ailments']) ) {
-                    $rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.materiamedica.plant_action', 
+                    $rc = ciniki_core_objectDelete($ciniki, $args['tnid'], 'ciniki.materiamedica.plant_action', 
                         $action_details['id'], $action_details['uuid'], 0x04);
                     if( $rc['stat'] != 'ok' ) {
                         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.materiamedica');
@@ -215,11 +215,11 @@ function ciniki_materiamedica_plantSystemActionsUpdate(&$ciniki) {
     }
 
     //
-    // Update the last_change date in the business modules
+    // Update the last_change date in the tenant modules
     // Ignore the result, as we don't want to stop user updates if this fails.
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
-    ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'materiamedica');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'updateModuleChangeDate');
+    ciniki_tenants_updateModuleChangeDate($ciniki, $args['tnid'], 'ciniki', 'materiamedica');
 
     return array('stat'=>'ok');
 }

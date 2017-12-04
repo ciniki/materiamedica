@@ -12,7 +12,7 @@ function ciniki_materiamedica_plantSearch($ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'start_needle'=>array('required'=>'yes', 'blank'=>'yes', 'name'=>'Search String'), 
         'limit'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Limit'), 
         )); 
@@ -23,21 +23,21 @@ function ciniki_materiamedica_plantSearch($ciniki) {
     
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantSearch', 0, 0); 
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['tnid'], 'ciniki.materiamedica.plantSearch', 0, 0); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
 
     //
-    // Get the number of faqs in each status for the business, 
+    // Get the number of faqs in each status for the tenant, 
     // if no rows found, then return empty array
     //
     $strsql = "SELECT id, family, genus, species, common_name "
         . "FROM ciniki_materiamedica_plants "
-        . "WHERE ciniki_materiamedica_plants.business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE ciniki_materiamedica_plants.tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND (family LIKE '" . ciniki_core_dbQuote($ciniki, $args['start_needle']) . "%' "
             . "OR genus LIKE '" . ciniki_core_dbQuote($ciniki, $args['start_needle']) . "%' "
             . "OR species LIKE '" . ciniki_core_dbQuote($ciniki, $args['start_needle']) . "%' "

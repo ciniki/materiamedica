@@ -8,8 +8,8 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:     The ID of the business to add the plant to.  The user must
-//                  an owner of the business.
+// tnid:     The ID of the tenant to add the plant to.  The user must
+//                  an owner of the tenant.
 //
 // 
 // Returns
@@ -22,7 +22,7 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'plant_number'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Number'), 
         'family'=>array('required'=>'no', 'blank'=>'yes', 'name'=>'Family'), 
         'genus'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Genus'), 
@@ -52,10 +52,10 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
 
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantAdd'); 
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['tnid'], 'ciniki.materiamedica.plantAdd'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -75,7 +75,7 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
     //
     $strsql = "SELECT id, permalink "
         . "FROM ciniki_materiamedica_plants "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND permalink = '" . ciniki_core_dbQuote($ciniki, $args['permalink']) . "' "
         . "";
     $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.materiamedica', 'plant');
@@ -102,7 +102,7 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
     // Add the plant
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectAdd');
-    $rc = ciniki_core_objectAdd($ciniki, $args['business_id'], 'ciniki.materiamedica.plant', $args);
+    $rc = ciniki_core_objectAdd($ciniki, $args['tnid'], 'ciniki.materiamedica.plant', $args);
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }
@@ -118,7 +118,7 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
     foreach($tag_types as $tag_type => $arg_name) {
         if( isset($args['tag-' . $tag_type]) ) {
             ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'tagsUpdate');
-            $rc = ciniki_core_tagsUpdate($ciniki, 'ciniki.materiamedica', 'plant_tag', $args['business_id'],
+            $rc = ciniki_core_tagsUpdate($ciniki, 'ciniki.materiamedica', 'plant_tag', $args['tnid'],
                 'ciniki_materiamedica_plant_tags', 'ciniki_materiamedica_history',
                 'plant_id', $plant_id, $tag_type, $args['tag-' . $tag_type]);
             if( $rc['stat'] != 'ok' ) {
@@ -137,11 +137,11 @@ function ciniki_materiamedica_plantAdd(&$ciniki) {
     }
 
     //
-    // Update the last_change date in the business modules
+    // Update the last_change date in the tenant modules
     // Ignore the result, as we don't want to stop user updates if this fails.
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
-    ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'materiamedica');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'updateModuleChangeDate');
+    ciniki_tenants_updateModuleChangeDate($ciniki, $args['tnid'], 'ciniki', 'materiamedica');
 
     return array('stat'=>'ok', 'id'=>$plant_id);
 }

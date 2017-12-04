@@ -10,7 +10,7 @@
 // ---------
 // api_key:
 // auth_token:
-// business_id:         The ID of the business to get the details for.
+// tnid:         The ID of the tenant to get the details for.
 // plant_id:            The ID of the plant to get the history for.
 // field:               The field to get the history for. This can be any of the elements 
 //                      returned by the ciniki.materiamedica.get method.
@@ -28,7 +28,7 @@ function ciniki_materiamedica_plantHistory($ciniki) {
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'plant_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Plant'), 
         'field'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'field'), 
         ));
@@ -38,16 +38,16 @@ function ciniki_materiamedica_plantHistory($ciniki) {
     $args = $rc['args'];
     
     //
-    // Check access to business_id as owner, or sys admin
+    // Check access to tnid as owner, or sys admin
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.plantHistory');
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['tnid'], 'ciniki.materiamedica.plantHistory');
     if( $rc['stat'] != 'ok' ) {
         return $rc;
     }
 
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'dbGetModuleHistory');
     return ciniki_core_dbGetModuleHistory($ciniki, 'ciniki.materiamedica', 'ciniki_materiamedica_history', 
-        $args['business_id'], 'ciniki_materiamedica_plants', $args['plant_id'], $args['field']);
+        $args['tnid'], 'ciniki_materiamedica_plants', $args['plant_id'], $args['field']);
 }
 ?>

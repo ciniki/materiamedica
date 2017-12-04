@@ -16,7 +16,7 @@ function ciniki_materiamedica_noteDelete(&$ciniki) {
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'prepareArgs');
     $rc = ciniki_core_prepareArgs($ciniki, 'no', array(
-        'business_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Business'), 
+        'tnid'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Tenant'), 
         'note_id'=>array('required'=>'yes', 'blank'=>'no', 'name'=>'Note'),
         )); 
     if( $rc['stat'] != 'ok' ) { 
@@ -26,10 +26,10 @@ function ciniki_materiamedica_noteDelete(&$ciniki) {
 
     //  
     // Make sure this module is activated, and
-    // check permission to run this function for this business
+    // check permission to run this function for this tenant
     //  
     ciniki_core_loadMethod($ciniki, 'ciniki', 'materiamedica', 'private', 'checkAccess');
-    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['business_id'], 'ciniki.materiamedica.noteDelete'); 
+    $rc = ciniki_materiamedica_checkAccess($ciniki, $args['tnid'], 'ciniki.materiamedica.noteDelete'); 
     if( $rc['stat'] != 'ok' ) { 
         return $rc;
     }   
@@ -39,7 +39,7 @@ function ciniki_materiamedica_noteDelete(&$ciniki) {
     //
     $strsql = "SELECT id, uuid "
         . "FROM ciniki_materiamedica_notes "
-        . "WHERE business_id = '" . ciniki_core_dbQuote($ciniki, $args['business_id']) . "' "
+        . "WHERE tnid = '" . ciniki_core_dbQuote($ciniki, $args['tnid']) . "' "
         . "AND id = '" . ciniki_core_dbQuote($ciniki, $args['note_id']) . "' "
         . "";
     $rc = ciniki_core_dbHashQuery($ciniki, $strsql, 'ciniki.materiamedica', 'item');
@@ -66,9 +66,9 @@ function ciniki_materiamedica_noteDelete(&$ciniki) {
     //
     // Remove any citations for this note
     //
-    if( isset($ciniki['business']['modules']['ciniki.citations']) ) {
+    if( isset($ciniki['tenant']['modules']['ciniki.citations']) ) {
         ciniki_core_loadMethod($ciniki, 'ciniki', 'citations', 'hooks', 'removeObjectCitations');
-        $rc = ciniki_citations_hooks_removeObjectCitations($ciniki, $args['business_id'], array(
+        $rc = ciniki_citations_hooks_removeObjectCitations($ciniki, $args['tnid'], array(
             'object'=>'ciniki.materiamedica.note',
             'object_id'=>$args['note_id'],
             ));
@@ -82,7 +82,7 @@ function ciniki_materiamedica_noteDelete(&$ciniki) {
     // Delete the object
     //
     ciniki_core_loadMethod($ciniki, 'ciniki', 'core', 'private', 'objectDelete');
-    $rc = ciniki_core_objectDelete($ciniki, $args['business_id'], 'ciniki.materiamedica.note', $args['note_id'], $item['uuid'], 0x04);
+    $rc = ciniki_core_objectDelete($ciniki, $args['tnid'], 'ciniki.materiamedica.note', $args['note_id'], $item['uuid'], 0x04);
     if( $rc['stat'] != 'ok' ) {
         ciniki_core_dbTransactionRollback($ciniki, 'ciniki.materiamedica');
         return $rc;
@@ -97,11 +97,11 @@ function ciniki_materiamedica_noteDelete(&$ciniki) {
     }
 
     //
-    // Update the last_change date in the business modules
+    // Update the last_change date in the tenant modules
     // Ignore the result, as we don't want to stop user updates if this fails.
     //
-    ciniki_core_loadMethod($ciniki, 'ciniki', 'businesses', 'private', 'updateModuleChangeDate');
-    ciniki_businesses_updateModuleChangeDate($ciniki, $args['business_id'], 'ciniki', 'materiamedica');
+    ciniki_core_loadMethod($ciniki, 'ciniki', 'tenants', 'private', 'updateModuleChangeDate');
+    ciniki_tenants_updateModuleChangeDate($ciniki, $args['tnid'], 'ciniki', 'materiamedica');
 
     return array('stat'=>'ok');
 }
