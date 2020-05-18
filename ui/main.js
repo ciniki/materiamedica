@@ -612,7 +612,7 @@ function ciniki_materiamedica_main() {
         //
         var appContainer = M.createContainer(appPrefix, 'ciniki_materiamedica_main', 'yes');
         if( appContainer == null ) {
-            alert('App Error');
+            M.alert('App Error');
             return false;
         }
 
@@ -748,12 +748,12 @@ function ciniki_materiamedica_main() {
         // Check form values
         var nv = this.edit.formFieldValue(this.edit.sections.info.fields.genus, 'genus');
         if( nv != this.edit.fieldValue('info', 'genus') && nv == '' ) {
-            alert('You must specifiy a genus');
+            M.alert('You must specifiy a genus');
             return false;
         }
         var nv = this.edit.formFieldValue(this.edit.sections.info.fields.species, 'species');
         if( nv != this.edit.fieldValue('info', 'species') && nv == '' ) {
-            alert('You must specifiy a species');
+            M.alert('You must specifiy a species');
             return false;
         }
         if( this.edit.plant_id > 0 ) {
@@ -788,16 +788,16 @@ function ciniki_materiamedica_main() {
     };
 
     this.plantDelete = function() {
-        if( confirm('Are you sure you want to delete \'' + this.plant.data.name + '\'?  All information about it will be removed and unrecoverable.') ) {
+        M.confirm('Are you sure you want to delete \'' + this.plant.data.name + '\'?  All information about it will be removed and unrecoverable.',null,function() {
             var rsp = M.api.getJSONCb('ciniki.materiamedica.plantDelete', 
-                {'tnid':M.curTenantID, 'plant_id':this.edit.plant_id}, function(rsp) {
+                {'tnid':M.curTenantID, 'plant_id':M.ciniki_materiamedica_main.edit.plant_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;
                     }
                     M.ciniki_materiamedica_main.edit.close();
                 });
-        }
+        });
     };
 
     //

@@ -79,7 +79,7 @@ function ciniki_materiamedica_notes() {
         //
         var appContainer = M.createContainer(appPrefix, 'ciniki_materiamedica_notes', 'yes');
         if( appContainer == null ) {
-            alert('App Error');
+            M.alert('App Error');
             return false;
         }
 
@@ -153,15 +153,15 @@ function ciniki_materiamedica_notes() {
     };
 
     this.noteDelete = function() {
-        if( confirm('Are you sure you want to delete this note?') ) {
+        M.confirm('Are you sure you want to delete this note?',null,function() {
             M.api.getJSONCb('ciniki.materiamedica.noteDelete', {'tnid':M.curTenantID, 
-                'note_id':this.edit.note_id}, function(rsp) {
+                'note_id':M.ciniki_materiamedica_notes.edit.note_id}, function(rsp) {
                     if( rsp.stat != 'ok' ) {
                         M.api.err(rsp);
                         return false;
                     }
                     M.ciniki_materiamedica_notes.edit.close();
                 });
-        }
+        });
     };
 }
